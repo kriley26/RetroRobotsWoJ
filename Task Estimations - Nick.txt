@@ -1,0 +1,13 @@
+Task Estimations - Nick
+
+
+Testing:
+	Skeletal testing - 3 days
+	Minimal testing - 3 days
+	Target testing - 4 days
+
+
+Presentations:
+	Skeletal demo - 3 days
+	Minimal demo - 3 days
+	Target demo - 3 days
