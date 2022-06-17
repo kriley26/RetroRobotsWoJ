@@ -1,0 +1,35 @@
+Features of the Four Increments
+
+I.	Skeletal Increment-Architecture
+  •	Subsystems
+      o	Players
+      o	Questions
+      o	Game logic
+      o	GUI
+  •	Features
+      o	Player picks a sector via GUI
+      o	Player answers questions 
+      o	Read local files to retrieve questions
+      o	Display questions with given category in order
+      o	Update(answer correct/incorrect) and track scores
+      o	Opponents chooses the category
+      o	Counter to track remaining spins in the round
+
+II.	Minimal-most important functionality
+  •	Select questions/category via GUI
+  •	Multiple players play the game for two rounds
+  •	Win checker
+  •	Scores and tokens tracking
+
+III.	Target – what you can expect to produce in one semester
+  •	A functional game
+  •	Meet all the rules/requirements
+
+IV.	Dream-what you could do if you had enough time
+  •	Allow user to choose certain categories for the whole game
+  •	Animation of the wheel and sound effect
+  •	A version in another language, e.g., Chinese
+  •	Save user’s account information to allow multiple logins
+  •	Web-based game accessible from a browser
+
+
