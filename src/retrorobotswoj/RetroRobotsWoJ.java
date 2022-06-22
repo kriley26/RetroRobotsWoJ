@@ -5,6 +5,8 @@
  */
 package retrorobotswoj;
 
+import retrorobotswoj.gui.WheelOfJeopardy;
+
 /**
  *
  * @author KeeganRiley
@@ -15,7 +17,7 @@ public class RetroRobotsWoJ {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        WheelOfJeopardy wj = new WheelOfJeopardy();
     }
     
 }
