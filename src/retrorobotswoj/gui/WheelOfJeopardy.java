@@ -10,5 +10,10 @@ package retrorobotswoj.gui;
  * @author KeeganRiley
  */
 public class WheelOfJeopardy {
+
+    public WheelOfJeopardy() {
+        MainFrame mf = new MainFrame();
+    }
+    
     
 }
