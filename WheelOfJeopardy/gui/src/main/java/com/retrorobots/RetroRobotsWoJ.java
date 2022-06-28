@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrorobotswoj;
+package com.retrorobots;
 
-import retrorobotswoj.gui.WheelOfJeopardy;
+import com.retrorobots.gui.WheelOfJeopardy;
 
 /**
  *
