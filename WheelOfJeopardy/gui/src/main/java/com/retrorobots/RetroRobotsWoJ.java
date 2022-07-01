@@ -5,7 +5,9 @@
  */
 package com.retrorobots;
 
-import com.retrorobots.gui.WheelOfJeopardy;
+import com.retrorobots.playerGUI.MainWindow;
+import com.retrorobots.server.ServerApplication;
+import org.springframework.boot.SpringApplication;
 
 /**
  *
@@ -17,7 +19,8 @@ public class RetroRobotsWoJ {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WheelOfJeopardy wj = new WheelOfJeopardy();
+        MainWindow mw = new MainWindow();
+        SpringApplication.run(ServerApplication.class, args);
     }
     
 }

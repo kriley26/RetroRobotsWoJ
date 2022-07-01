@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.retrorobots.mainproject;
+package com.retrorobots.server.models;
 
 /**
  *
  * @author KeeganRiley
  */
-public class Game {
+public class Question {
     
 }
