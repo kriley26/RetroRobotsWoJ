@@ -122,7 +122,7 @@ public class Game {
 		int quesCounter = 30; // max questions in one round
 		
 		while(spinCounter > 0 && quesCounter > 0) {
-			
+			//TODO Game flow to be implemented after connected to GUI/Server/Database
 		}
 	} // end oneRound
 } // end class Game
