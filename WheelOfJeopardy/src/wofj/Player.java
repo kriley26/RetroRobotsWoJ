@@ -12,6 +12,8 @@
  * */
 package wofj;
 
+import java.util.Scanner;
+
 public class Player {
 	public String name;
 	public int score;
@@ -59,6 +61,13 @@ public class Player {
 		return token;
 	}
 	
+	// add token when player gets a free turn sector
+	public int addToken() {
+		int newToken = getToken() + 1;
+		setToken(newToken);
+		return newToken;
+	}
+	
 	// add points to current score and return the updated score
 	public int add(int points) {
 		setScore(score + points);
@@ -71,24 +80,31 @@ public class Player {
 		return score;
 	}
 	
-	// Driver with sample test cases
-	public static void main(String[] args) {
-		Player p1 = new Player("Jack", 0, 0);
-		Player p2 = new Player("Sue", 0, 0);
-		
-		p1.add(100);
-		p1.add(20);
-		p1.setToken(6);
-		System.out.println(p1.name);
-		System.out.println("Score: " + p1.getScore());
-		System.out.println("Token#: " + p1.getToken());
-		
-		p2.add(200);
-		p2.subtract(400);
-		p2.setToken(3);
-		System.out.println("\n" + p2.name);
-		System.out.println("Score: " + p2.getScore());
-		System.out.println("Token#: " + p2.getToken());
+	// Prompt player to enter a choice among A, B, and C
+	char input() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter your choice: A, B, or C");
+		char res = sc.next().charAt(0);
+		return res;	
+	}
+	
+	/** Check if player's response is correct
+	 * options: 'A', 'B', 'C' 
+	 * @param answer	the correct answer
+	 * @param response	the response from player
+	 */
+	boolean checkResponse(char answer, char response) {
+		boolean res = (response == Character.toLowerCase(answer) || response == answer);
+		return res;
+	}
+
+	/** Update player's score according to the correctness of response
+	 * @param res	boolean value of player's response
+	 */
+	void updateScore(boolean res, int points) {
+		int newScore = 0;
+		if (res == true) newScore = add(points);
+		else newScore = subtract(points);
 	}
 } // end class Player
 
