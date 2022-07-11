@@ -28,7 +28,7 @@ else
 		
 		if [[ $(mysql -u${USERNAME} -p ${PASSWORD} -e "$SQL_IS_EMPTY" $DATABASE) ]]
 		then
-			mysql --local-infile=1 -u${USERNAME} -p${PASSWORD} -e  "USE ${DATABASE}; LOAD DATA LOCAL INFILE './JEOPARDY_CSV.csv' INTO TABLE ${TABLE} FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;"
+			mysql --local-infile=1 -u${USERNAME} -p${PASSWORD} -e  "USE ${DATABASE}; LOAD DATA LOCAL INFILE './jeopardy.csv' INTO TABLE ${TABLE} FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;"
 		else
 			echo "Table is not empty"
 			exit 1
