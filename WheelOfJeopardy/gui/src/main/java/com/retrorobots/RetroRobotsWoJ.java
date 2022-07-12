@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrorobotswoj;
+package com.retrorobots;
 
-import retrorobotswoj.gui.WheelOfJeopardy;
+import com.retrorobots.mainGameGUI.MainWindow;
+import com.retrorobots.server.ServerApplication;
+import org.springframework.boot.SpringApplication;
 
 /**
  *
@@ -17,7 +19,8 @@ public class RetroRobotsWoJ {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WheelOfJeopardy wj = new WheelOfJeopardy();
+        MainWindow mw = new MainWindow();
+        SpringApplication.run(ServerApplication.class, args);
     }
     
 }
