@@ -3,9 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.retrorobots.playerGUI;
+package com.retrorobots.mainGameGUI;
 
+import com.retrorobots.playerGUI.AnswerPanel;
+import com.retrorobots.playerGUI.QuestionPanel;
 import java.awt.Dimension;
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -24,15 +28,13 @@ public class MainWindow extends javax.swing.JFrame {
     }
     
     private void init() {
-        
-        QuestionPanel qp = new QuestionPanel();
-        AnswerPanel ap = new AnswerPanel();
-        
-        this.setupTop.add(qp);
-        this.setupBottom.add(ap);
-        
-        this.setupTop.revalidate();
-        this.setupBottom.revalidate();
+        StartGamePanel sgp = new StartGamePanel(this);
+        this.setupInterior.add(sgp);
+        this.setupInterior.revalidate();
+    }
+    
+    public void startGame() {
+        this.jTabbedPane1.setSelectedIndex(1);
     }
 
     /**
@@ -47,47 +49,38 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         setupPanel = new javax.swing.JPanel();
-        setupTop = new javax.swing.JPanel();
-        setupBottom = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        setupInterior = new javax.swing.JPanel();
+        currentGamePanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         setupPanel.setLayout(new java.awt.GridBagLayout());
 
-        setupTop.setLayout(new javax.swing.BoxLayout(setupTop, javax.swing.BoxLayout.LINE_AXIS));
+        setupInterior.setLayout(new javax.swing.BoxLayout(setupInterior, javax.swing.BoxLayout.LINE_AXIS));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        setupPanel.add(setupTop, gridBagConstraints);
-
-        setupBottom.setLayout(new javax.swing.BoxLayout(setupBottom, javax.swing.BoxLayout.LINE_AXIS));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        setupPanel.add(setupBottom, gridBagConstraints);
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        setupPanel.add(setupInterior, gridBagConstraints);
 
         jTabbedPane1.addTab("Set-Up", null, setupPanel, "Set up WOJ Game");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 398, Short.MAX_VALUE)
+        javax.swing.GroupLayout currentGamePanelLayout = new javax.swing.GroupLayout(currentGamePanel);
+        currentGamePanel.setLayout(currentGamePanelLayout);
+        currentGamePanelLayout.setHorizontalGroup(
+            currentGamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 274, Short.MAX_VALUE)
+        currentGamePanelLayout.setVerticalGroup(
+            currentGamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 267, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("tab2", jPanel1);
+        jTabbedPane1.addTab("Current Game", currentGamePanel);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -138,10 +131,9 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel currentGamePanel;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JPanel setupBottom;
+    private javax.swing.JPanel setupInterior;
     private javax.swing.JPanel setupPanel;
-    private javax.swing.JPanel setupTop;
     // End of variables declaration//GEN-END:variables
 }

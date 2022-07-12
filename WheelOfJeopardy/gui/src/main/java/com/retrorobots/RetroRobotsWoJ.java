@@ -5,7 +5,7 @@
  */
 package com.retrorobots;
 
-import com.retrorobots.playerGUI.MainWindow;
+import com.retrorobots.mainGameGUI.MainWindow;
 import com.retrorobots.server.ServerApplication;
 import org.springframework.boot.SpringApplication;
 

@@ -49,5 +49,5 @@ then
 else
 	echo "Table not exists...."
 	mysql -u${USERNAME} -p${PASSWORD} -e "SHOW DATABASES;"
-	mysql -u${USERNAME} -p${PASSWORD} -e "USE ${DATABASE}; CREATE TABLE ${TABLE} (show_number int, air_date varchar(255), round varchar(255), category varchar(255), value int, question text(1000), answer varchar(255));"
+	mysql -u${USERNAME} -p${PASSWORD} -e "USE ${DATABASE}; CREATE TABLE ${TABLE} (id int NOT NULL AUTO_INCREMENT, show_number int, air_date varchar(255), round varchar(255), category varchar(255), value varchar(255), question text(1000), answer varchar(255), PRIMARY KEY(id));"
 fi
