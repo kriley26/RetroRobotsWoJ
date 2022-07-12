@@ -11,7 +11,9 @@
  * @author WenjunZhou
  */
 
-package wofj;
+package com.retrorobots.wofj;
+
+import com.retrorobots.wofj.Player;
 
 public class Game {
 	
@@ -31,7 +33,7 @@ public class Game {
 			case "category1": case "category2": case "category3":
 			case "category4": case "category5":	case "category6":
 				//TODO quesGenerator in Database
-				quesGenerator(sector);
+				//quesGenerator(sector);
 				//TODO break down info of questions, answer, and points from the returned question
 				onePlay(p, "Question", 'A', 200);
 				break;
@@ -46,14 +48,14 @@ public class Game {
 				break;
 			case "player's choice":
 				//TODO quesGenerator in Database
-				quesGenerator(playerChoice(p)); 
+				//quesGenerator(playerChoice(p));
 				//TODO break down info of questions, answer, and points from the returned question
 				onePlay(p, "Question", 'A', 100); 
 				break;
 			case "opponents' choice":
 				String category = playerChoice(turnMonitor(p)); // let the next player pick category for current
 				//TODO quesGenerator in Database
-				quesGenerator(category);
+				//quesGenerator(category);
 				//TODO break down info of questions, answer, and points from the returned question
 				onePlay(p, "Question", 'A', 200);
 				break;
@@ -66,7 +68,7 @@ public class Game {
 	// Monitor players' turn taking
 	Player turnMonitor(Player cur) {
 		//TODO check database to return the next player in line
-		return "Player next";
+		return cur;
 	}
 
 	// Prompt player to choose a category

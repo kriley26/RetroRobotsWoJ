@@ -1,4 +1,4 @@
-package wofj;
+package com.retrorobots.wofj;
 
 public class Main {
 	// Driver with sample test cases
