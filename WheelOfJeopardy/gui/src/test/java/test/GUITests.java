@@ -40,38 +40,4 @@ public class GUITests {
         assertTrue(true);
     }
 
-    @Test
-    void testDatabaseConnection() {
-        boolean databaseConnectionTest = false;
-
-        /**
-         * If database connection successful, set boolean databaseConnectionTest = true
-         */
-        try {
-            URL url = new URL("http://localhost:8080/question");
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("GET");
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer content = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
-            }
-            if (content != null) { databaseConnectionTest = true; }
-            in.close();
-            con.disconnect();
-
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(QuestionPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ProtocolException ex) {
-            Logger.getLogger(QuestionPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(QuestionPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        //databaseConnectionTest = true;
-
-        assertTrue(databaseConnectionTest == true);
-    }
 }
