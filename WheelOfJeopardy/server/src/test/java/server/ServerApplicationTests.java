@@ -9,6 +9,10 @@ import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/*
+ * Throws an error when I tried using @SpringBootTest
+ * Need to designate classes or make some other modifications to resolve
+ */
 //@SpringBootTest
 @ContextConfiguration
 class ServerApplicationTests {
@@ -16,27 +20,44 @@ class ServerApplicationTests {
 	ServerApplication testServerApplication;
 	QuestionController testQuestionController;
 
+	/*
+	 * Re-instantiate objects before each test case
+	 */
 	@BeforeEach
 	void setUp() {
 		testServerApplication = new ServerApplication();
 		testQuestionController = new QuestionController();
 	}
 
+	/*
+	 * ?
+	 */
 	@Test
 	void contextLoads() {
 	}
 
+	/*
+	 * Player tests - turns, scoring,
+	 */
 	@Test
-	void demoTestMethod() {
-		//assertTrue(true);
-		assertTrue(testServerApplication == testServerApplication);
+	void testPlayer() {
+		assertTrue(true);
 	}
 
+	/*
+	 * Game wheel tests - sectors, game board interface
+	 */
 	@Test
-	void testDatabaseConnection() {
-		boolean isConnected = false;
-		if (testQuestionController.getNewQuestion() != null) { isConnected = true; }
-		assertTrue(isConnected);
+	void testWheel() {
+		assertTrue(true);
+	}
+
+	/*
+	 * ?
+	 */
+	@Test
+	void testQuestion() {
+		assertTrue(true);
 	}
 
 }
