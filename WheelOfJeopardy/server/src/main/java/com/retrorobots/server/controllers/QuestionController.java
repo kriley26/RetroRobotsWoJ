@@ -20,7 +20,7 @@ import java.util.Random;
 public class QuestionController {
 
     @Autowired
-    QuestionRepository questionRepository;
+    private QuestionRepository questionRepository;
 
     private String q1 = "What is for lunch?";
 
