@@ -16,7 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 //@SpringBootTest
 @ContextConfiguration
 class ServerApplicationTests {
-
+	/*
+	 * Declare objects
+	 */
 	ServerApplication testServerApplication;
 	QuestionController testQuestionController;
 
@@ -30,33 +32,54 @@ class ServerApplicationTests {
 	}
 
 	/*
-	 * ?
+	 * Do we need this?
 	 */
 	@Test
 	void contextLoads() {
 	}
 
 	/*
-	 * Player tests - turns, scoring,
+	 * Player tests - turns, scoring
 	 */
 	@Test
 	void testPlayer() {
+		// Placeholder
+		// Turns change based on playerList loop
+		// Add to score for correct answer
+		// Subtract from score for incorrect answer
+		// Add round scores at the end of the second round
+		// Highest score wins game
+
+		// Placeholder
 		assertTrue(true);
 	}
 
 	/*
-	 * Game wheel tests - sectors, game board interface
+	 * Game wheel tests
 	 */
 	@Test
 	void testWheel() {
+		// Question category sectors
+		// Lose turn
+		// Free turn
+		// Bankrupt
+		// Player's choice
+		// Opponent's choices
+		// Spin again
+
+		// Placeholder
 		assertTrue(true);
 	}
 
 	/*
-	 * ?
+	 * Question tests
 	 */
 	@Test
-	void testQuestion() {
+	void testRounds() {
+		// First round - 50 spins or all questions answered moves to round two
+		// Second round - 50 spins of all questions answered ends game
+
+		// Placeholder
 		assertTrue(true);
 	}
 
