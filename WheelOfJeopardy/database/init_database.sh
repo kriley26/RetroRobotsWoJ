@@ -5,7 +5,7 @@ echo "Note: password will be hidden when typing"
 read -s rootpasswd
 
 # Prepare variables
-TABLE="questions"
+TABLE="question"
 SQL_EXISTS=$(printf 'SHOW TABLES LIKE "%s"' "$TABLE")
 SQL_IS_EMPTY=$(printf 'SELECT 1 FROM %s LIMIT 1' "$TABLE")
 
