@@ -10,7 +10,7 @@
  * 
  * @author WenjunZhou
  * */
-package com.retrorobots.wofj;
+package com.retrorobots.server.wofj;
 
 import java.util.Scanner;
 

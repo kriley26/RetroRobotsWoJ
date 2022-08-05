@@ -2,8 +2,7 @@ package com.retrorobots.server.controllers;
 
 import com.retrorobots.server.models.Category;
 import com.retrorobots.server.models.Question;
-import com.retrorobots.wofj.Game;
-import org.apache.tomcat.util.json.JSONParser;
+import com.retrorobots.server.wofj.Game;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,8 +12,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
