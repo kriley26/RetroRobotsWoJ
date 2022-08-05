@@ -23,8 +23,9 @@ public class GameController {
     private Game g;
 
     @RequestMapping("/startGame")
-    private String startGame() throws IOException {
+    private List<String> startGame() throws IOException {
         List<Category> categories = new ArrayList<>();
+        List<String> catNames = new ArrayList<>();
         g = new Game();
 
         // get catgories and questions
@@ -63,6 +64,7 @@ public class GameController {
                 quests.add(new Question(id, show_number, air_date, round, category, value, question, answer));
             }
             categories.add(new Category(catName, quests));
+            catNames.add(catName);
         }
 
 //        for (Category cat : categories) {
@@ -73,6 +75,6 @@ public class GameController {
 
         // create players and add them to game
 
-        return content.toString();
+        return catNames;
     }
 }
