@@ -14,6 +14,7 @@
 package com.retrorobots.wofj;
 
 import com.retrorobots.wofj.Player;
+import com.retrorobots.server.models.Question;
 
 public class Game {
 	

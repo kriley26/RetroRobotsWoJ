@@ -12,6 +12,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="untitled" target="17" />
+      <module name="wheel-of-jeopardy" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

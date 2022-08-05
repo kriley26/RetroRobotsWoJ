@@ -42,7 +42,7 @@ public class QuestionController {
     }
 
     @RequestMapping("/categories")
-    public List<String> getCategories() {
+    public List<Category> getCategories() {
         List<String> list = questionRepository.findDistinctCategory();
         List<String> currentCats = new ArrayList<>();
         List<Category> categories = new ArrayList<>();
@@ -63,24 +63,23 @@ public class QuestionController {
             }
         }
 
-//        for(String cat : currentCats) {
-//            System.out.println(cat);
-//            List<Question> questions = this.questionRepository.findCategoryQuestions(cat);
-//            Category newCat = new Category(cat, questions);
-//            categories.add(newCat);
-//        }
-
         for(Category c : categories) {
-            System.out.println(c.getCategoryName() + " Questions: " + c.getQuestions().size());
+            System.out.println("Category Name: " + c.getCategoryName());
+            int i = 1;
+            for (Question q : c.getQuestions()) {
+                System.out.println("Question " + i + ": " + q.toString());
+                i++;
+            }
+            System.out.println();
             currentCats.add(c.getCategoryName());
         }
 
 
-        return currentCats;
+        return categories;
     }
 
-    private List<Question> validateCategory(String category) {
-        return this.questionRepository.findCategoryQuestions(category);
+    public List<Question> validateCategory(String category) {
+        return questionRepository.findCategoryQuestions(category);
     }
     
 }
