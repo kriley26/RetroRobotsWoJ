@@ -69,13 +69,12 @@ public class Game {
 			this.quesCount = 30;
 	}
 
-	public void endRound(){
-			
+	public boolean endRoundCheck(){
+		return spinCount <= 0 || quesCount <= 0;
 	}
 
 	public void takeTurn() {
 		this.spinCount--;
-		this.quesCount--;
 	}
 
 	/** Find the winner among three players
@@ -106,59 +105,20 @@ public class Game {
 	// return boolean value if player's answer correct/wrong
 
 	public boolean answerQuestion(String answer){
-		// TODO to get current's answer for checking
 		boolean res = answer.equals(currQuestion.getAnswer());
-		//TODO to get this question's points
 		String[] arr = this.currQuestion.getValue().split("\\$");
 		String val = arr[1];
 		int points = Integer.parseInt(val);
 		this.currPlayer.updateScore(res, points);
+		quesCount--;
 		return res;
 	} // end answerQuestion
-
-	/**
-	 * process the sector selected in gui
-	 * @param sector	sector selected on the wheel
-	 * @param p			current player
-	 * */
-	//TODO
-	public void sectors(String sector, Player p) {
-		switch(sector) {
-			case "category1": case "category2": case "category3":
-			case "category4": case "category5":	case "category6":
-				boolean res = answerQuestion(sector);
-				// ToAdd ask player if redeem token or not
-				if(res || p.getToken() != 0) onePlay(p);
-				else onePlay(nextPlayer(p));
-				break;
-			case "lose turn":
-				onePlay(nextPlayer(p));
-				break;
-			case "free turn":
-				p.addToken();
-				onePlay(p);
-				break;
-			case "bankrupt":
-				p.setScore(0); // lost points for the current round
-				onePlay(nextPlayer(p));
-				break;
-			case "spin again":
-				onePlay(p);
-				break;
-			/**
-			 * case "player's choice":
-			 * case "opponents' choice":
-			 * TO BE Processed on GUI side
-			 */
-		}
-	} // end sectors
 
 	/** display question and options retrieved from database
 	 *
 	 * @param category	selected category
 	*/
 	public String queryQ(String category) {
-		// TODO send the selected category to database to retrieve current question
 		String question = "";
 
 		for(Category c : categoryList) {

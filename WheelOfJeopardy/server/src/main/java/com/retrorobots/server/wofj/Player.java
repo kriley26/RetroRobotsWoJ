@@ -73,7 +73,7 @@ public class Player {
 		return roundOneScore + roundTwoScore;
 	}
 	// save score for each round and reset
-	public void endRound(int round){
+	public void saveRoundScore(int round){
 		if(round == 1) roundOneScore = this.score;
 		else if(round == 2) roundTwoScore = this.score;
 		this.score = 0;

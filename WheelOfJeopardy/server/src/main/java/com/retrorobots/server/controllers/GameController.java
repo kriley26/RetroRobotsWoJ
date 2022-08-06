@@ -29,7 +29,7 @@ public class GameController {
         List<String> catNames = new ArrayList<>();
         g = new Game();
 
-        // get catgories and questions
+        // get categories and questions
         URL url = new URL("http://localhost:8080/categories");
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");
@@ -86,10 +86,15 @@ public class GameController {
         return catNames;
     }
 
+    @RequestMapping("/currentPlayer")
+    public String currentPlayer(){
+        return g.getCurrPlayer().getName();
+    }
 
     @RequestMapping("/getQuestion")
-    public void getCategory() {
-
+    public String getQuestion() {
+        String s = "";
+        return g.queryQ(s);
     }
 
     @RequestMapping("/verifyAnswer")
@@ -103,16 +108,33 @@ public class GameController {
             g.setCurrPlayer(player);
             return player.getName();
         }
+    }
 
+    @RequestMapping("/freeturn")
+    public void freeTurn(){
+        g.getCurrPlayer().addToken();
     }
 
     @RequestMapping("/loseturn")
-    public void loseTurn() {
-
+    public String loseTurn() {
+        Player player = g.nextPlayer();
+        g.setCurrPlayer(player);
+        return player.getName();
     }
 
     @RequestMapping("/bankrupt")
-    public void bankrupt() {
+    public String bankrupt() {
+        g.getCurrPlayer().setScore(0);
+        return loseTurn();
+    }
 
+    @RequestMapping("/opponentschoice/player")
+    public String oppoChoice() {
+        return g.nextPlayer().getName();
+    }
+
+    @RequestMapping("/opponentsChoice/Question")
+    public String oppoChoiceQ() {
+    // TODO
     }
 }
