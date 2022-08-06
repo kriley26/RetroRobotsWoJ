@@ -18,17 +18,17 @@ public class Player {
 	public String name;
 	public int score;
     public int token;
-    
+    public int roundOneScore;
+	public int roundTwoScore;
+
     /**
      * Create a new player
      * @param name 		player's name
      * @param score		player's score
      * @param token		player's token amount 
      */ 
-	public Player(String name, int score, int token) {
+	public Player(String name) {
 		setName(name);
-		setScore(score);
-		setToken(token);
 	}
 	
 	// set player's name
@@ -50,7 +50,35 @@ public class Player {
 	public int getScore() {
 		return score;
 	}
-	
+
+	public void setRoundOneScore(int score){
+		this.roundOneScore = score;
+	}
+
+	public int getRoundOneScore(){
+		return this.roundOneScore;
+	}
+
+	public int getRoundTwoScore()
+	{
+		return roundTwoScore;
+	}
+
+	public void setRoundTwoScore(int roundTwoScore)
+	{
+		this.roundTwoScore = roundTwoScore;
+	}
+
+	public int getFinalScore(){
+		return roundOneScore + roundTwoScore;
+	}
+	// save score for each round and reset
+	public void endRound(int round){
+		if(round == 1) roundOneScore = this.score;
+		else if(round == 2) roundTwoScore = this.score;
+		this.score = 0;
+	}
+
 	// set player's token amount
 	public void setToken(int token) {
 		this.token = token;
@@ -69,15 +97,13 @@ public class Player {
 	}
 
 	// add points to current score and return the updated score
-	public int add(int points) {
+	public void add(int points) {
 		setScore(score + points);
-		return score;
 	}
 	
 	// subtract points from current score and return the updated score 
-	public int subtract(int points) {
+	public void subtract(int points) {
 		setScore(score - points);
-		return score;
 	}
 	
 	// Prompt player to enter a choice among A, B, and C
@@ -88,23 +114,12 @@ public class Player {
 		return res;
 	}
 
-	/** Check if player's response is correct
-	 * options: 'A', 'B', 'C'
-	 * @param answer	the correct answer
-	 * @param response	the response from player
-	 */
-	boolean checkResponse(char answer, char response) {
-		boolean res = (response == Character.toLowerCase(answer) || response == answer);
-		return res;
-	}
-
 	/** Update player's score according to the correctness of response
 	 * @param res	boolean value of player's response
 	 */
 	void updateScore(boolean res, int points) {
-		int newScore = 0;
-		if (res == true) newScore = add(points);
-		else newScore = subtract(points);
+		if (res) add(points);
+		else subtract(points);
 	}
 } // end class Player
 

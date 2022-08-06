@@ -3,6 +3,7 @@ package com.retrorobots.server.controllers;
 import com.retrorobots.server.models.Category;
 import com.retrorobots.server.models.Question;
 import com.retrorobots.server.wofj.Game;
+import com.retrorobots.server.wofj.Player;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,9 +73,46 @@ public class GameController {
 //        }
 
         // add categories and questions to game
-
+        for(Category c: categories){
+            g.addCategory(c);
+        }
         // create players and add them to game
+        //TODO to be updated with player's choice
+        List<Player> playerList = new ArrayList<Player>();
+        playerList.add(new Player("p1"));
+        playerList.add(new Player("p2"));
+        g.addPlayerList(playerList);
 
         return catNames;
+    }
+
+
+    @RequestMapping("/getQuestion")
+    public void getCategory() {
+
+    }
+
+    @RequestMapping("/verifyAnswer")
+    public String verifyAnswer() {
+        String answer = "";
+        boolean correct = g.answerQuestion(answer);
+        if (correct) {
+            return g.getCurrPlayer().getName();
+        } else {
+            Player player = g.nextPlayer();
+            g.setCurrPlayer(player);
+            return player.getName();
+        }
+
+    }
+
+    @RequestMapping("/loseturn")
+    public void loseTurn() {
+
+    }
+
+    @RequestMapping("/bankrupt")
+    public void bankrupt() {
+
     }
 }
