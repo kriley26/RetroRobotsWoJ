@@ -54,7 +54,7 @@ public class Wheel extends javax.swing.JPanel {
     
     private boolean spinOnOff = false;
     private double spinSpeed = 0;
-    private double maxSpinSpeed = 360;
+    private double maxSpinSpeed = 1000;
     private double spinDeceleration = -20;
     private Timer speedTimer;
     private long timeStart, timeEnd;

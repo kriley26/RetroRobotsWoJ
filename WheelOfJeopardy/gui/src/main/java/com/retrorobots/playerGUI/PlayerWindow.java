@@ -5,14 +5,17 @@
 package com.retrorobots.playerGUI;
 
 import com.retrorobots.ServerConnectorFactory;
+import com.retrorobots.mainGameGUI.MainWindow;
 import com.retrorobots.playerGUI.gameWheel.MainWheel;
 import com.retrorobots.playerGUI.gameWheel.Wheel;
+import com.retrorobots.server.wofj.Player;
 import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +26,7 @@ import java.util.logging.Logger;
  */
 public class PlayerWindow extends javax.swing.JFrame {
 
+    private MainWindow main;
     private MainWheel wheel;
     private boolean active = false;
     private QuestionPanel qp;
@@ -39,9 +43,14 @@ public class PlayerWindow extends javax.swing.JFrame {
         setVisible(true);
     }
 
+    public PlayerWindow(MainWindow main, String playerName, List<String> cats) {
+        this(playerName, cats);
+        this.main = main;
+    }
+
     private void init(List<String> cats) {
-        qp = new QuestionPanel();
-        ap = new AnswerPanel();
+        qp = new QuestionPanel(this);
+        ap = new AnswerPanel(this);
 
         this.topPanel.add(qp);
         this.topPanel.revalidate();
@@ -71,7 +80,18 @@ public class PlayerWindow extends javax.swing.JFrame {
 
     public void setActive(boolean active) {
         this.active = active;
+        this.jTabbedPane1.setSelectedIndex(0);
         spinButton.setEnabled(active);
+    }
+
+    public void spinAgain() {
+        setActive(true);
+        this.jTabbedPane1.setSelectedIndex(0);
+    }
+
+    public void switchPlayers(String name) {
+        this.setActive(false);
+        this.main.updatePlayerFocus(name);
     }
 
     /**
@@ -198,7 +218,11 @@ public class PlayerWindow extends javax.swing.JFrame {
 
     private void spinButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spinButtonActionPerformed
 
-        double initialSpeed = 1000;
+        double base = 180;
+        Random rand = new Random();
+        int upperbound = 50;
+        int int_random = rand.nextInt(upperbound);
+        double initialSpeed = base + (int_random*15);
         initialSpeed = (int)Math.signum(initialSpeed) * Math.min(Math.abs(initialSpeed), wheel.getMaxSpinSpeed());
         try {
             wheel.startSpinAsync(Math.abs(initialSpeed), (int)Math.signum(initialSpeed), -100);

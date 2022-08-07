@@ -120,8 +120,6 @@ public class Game {
 	 * @return question
 	*/
 	public Question queryQ(String category) {
-		String question = "";
-
 		for(Category c : categoryList) {
 			if (c.getCategoryName().equals(category)) {
 				this.currQuestion = c.getNextQuestion();

@@ -5,17 +5,28 @@
  */
 package com.retrorobots.playerGUI;
 
+import com.retrorobots.ServerConnectorFactory;
+import org.json.JSONObject;
+
 /**
  *
  * @author KeeganRiley
  */
 public class AnswerPanel extends javax.swing.JPanel {
 
+    private PlayerWindow pw;
+
     /**
      * Creates new form AnswerPanel
      */
     public AnswerPanel() {
         initComponents();
+        this.pw = null;
+    }
+
+    public AnswerPanel(PlayerWindow pw) {
+        this();
+        this.pw = pw;
     }
 
     /**
@@ -45,6 +56,11 @@ public class AnswerPanel extends javax.swing.JPanel {
         add(jTextField1, gridBagConstraints);
 
         jButton1.setText("Submit");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -53,6 +69,22 @@ public class AnswerPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(15, 15, 15, 15);
         add(jButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        String data = this.jTextField1.getText();
+        String returnData = ServerConnectorFactory.queryServer(ServerConnectorFactory.VERIFY_ANSWER_PATH+"?ans="+data);
+        JSONObject anRes = new JSONObject(returnData);
+        boolean correct = anRes.getBoolean("result");
+        if (correct) {
+            this.pw.spinAgain();
+        } else {
+            JSONObject game = anRes.getJSONObject("game");
+            JSONObject currP = game.getJSONObject("currPlayer");
+            this.pw.switchPlayers(currP.getString("name"));
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

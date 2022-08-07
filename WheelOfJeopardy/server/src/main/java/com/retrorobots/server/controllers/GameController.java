@@ -1,5 +1,6 @@
 package com.retrorobots.server.controllers;
 
+import com.retrorobots.server.models.AnswerResult;
 import com.retrorobots.server.models.Category;
 import com.retrorobots.server.models.Question;
 import com.retrorobots.server.wofj.Game;
@@ -95,16 +96,15 @@ public class GameController {
     }
 
     @RequestMapping("/verifyAnswer")
-    public String verifyAnswer() {
-        String answer = "";
-        boolean correct = g.answerQuestion(answer);
-        if (correct) {
-            return g.getCurrPlayer().getName();
-        } else {
+    public AnswerResult verifyAnswer(@RequestParam String ans) {
+        System.out.println(ans);
+        boolean correct = g.answerQuestion(ans);
+        if (!correct) {
             Player player = g.nextPlayer();
             g.setCurrPlayer(player);
-            return player.getName();
         }
+        AnswerResult an = new AnswerResult(g,correct);
+        return an;
     }
 
     @RequestMapping("/freeTurn")

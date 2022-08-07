@@ -13,12 +13,20 @@ import com.retrorobots.ServerConnectorFactory;
  */
 public class QuestionPanel extends javax.swing.JPanel {
 
+    private PlayerWindow pw;
+
     /**
      * Creates new form QuestionPanel
      */
     public QuestionPanel() {
         initComponents();
         getNewQuestionButton.setVisible(false);
+        this.pw = null;
+    }
+
+    public QuestionPanel(PlayerWindow pw) {
+        this();
+        this.pw = pw;
     }
 
     /**

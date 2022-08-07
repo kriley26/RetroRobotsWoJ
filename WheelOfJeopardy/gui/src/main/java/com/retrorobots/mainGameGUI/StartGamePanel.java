@@ -10,7 +10,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -22,6 +24,7 @@ public class StartGamePanel extends javax.swing.JPanel {
     private MainWindow main;
     private List<String> categories;
     private List<JSONObject> playerList;
+    private Map<String, PlayerWindow> windMap;
     
     /**
      * Creates new form NewGamePanel
@@ -31,6 +34,7 @@ public class StartGamePanel extends javax.swing.JPanel {
         this.main = main;
         this.categories = new ArrayList<>();
         this.playerList = new ArrayList<>();
+        this.windMap = new HashMap<>();
     }
     
     public int getPlayerCount() {
@@ -39,10 +43,17 @@ public class StartGamePanel extends javax.swing.JPanel {
     
     private void createPlayerMenus() {
         for (JSONObject obj : playerList) {
-            PlayerWindow pw = new PlayerWindow(obj.getString("name"), categories);
+            PlayerWindow pw = new PlayerWindow(this.main, obj.getString("name"), categories);
             if (obj.getString("name").equals(curPlayer.getString("name"))) {
                 pw.setActive(true);
             }
+            this.windMap.put(obj.getString("name"), pw);
+        }
+    }
+
+    public void updatePlayerWindow(String name) {
+        if(windMap.containsKey(name)) {
+            windMap.get(name).setActive(true);
         }
     }
 

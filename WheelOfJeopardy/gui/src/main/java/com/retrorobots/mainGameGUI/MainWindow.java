@@ -17,6 +17,8 @@ import javax.swing.SwingUtilities;
  */
 public class MainWindow extends javax.swing.JFrame {
 
+    private StartGamePanel sgp;
+
     /**
      * Creates new form MainFrame
      */
@@ -28,13 +30,17 @@ public class MainWindow extends javax.swing.JFrame {
     }
     
     private void init() {
-        StartGamePanel sgp = new StartGamePanel(this);
+        this.sgp = new StartGamePanel(this);
         this.setupInterior.add(sgp);
         this.setupInterior.revalidate();
     }
     
     public void startGame() {
         this.jTabbedPane1.setSelectedIndex(1);
+    }
+
+    public void updatePlayerFocus(String name) {
+        this.sgp.updatePlayerWindow(name);
     }
 
     /**
