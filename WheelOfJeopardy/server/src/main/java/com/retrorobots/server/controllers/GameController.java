@@ -136,5 +136,6 @@ public class GameController {
     @RequestMapping("/opponentsChoice/Question")
     public String oppoChoiceQ() {
     // TODO
+        return "";
     }
 }

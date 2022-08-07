@@ -81,5 +81,4 @@ public class QuestionController {
     public List<Question> validateCategory(String category) {
         return questionRepository.findCategoryQuestions(category);
     }
-    
 }

@@ -12,8 +12,6 @@
  * */
 package com.retrorobots.server.wofj;
 
-import java.util.Scanner;
-
 public class Player {
 	public String name;
 	public int score;
@@ -24,9 +22,7 @@ public class Player {
     /**
      * Create a new player
      * @param name 		player's name
-     * @param score		player's score
-     * @param token		player's token amount 
-     */ 
+     */
 	public Player(String name) {
 		setName(name);
 	}
@@ -51,24 +47,29 @@ public class Player {
 		return score;
 	}
 
+	// save player's score of the first round
 	public void setRoundOneScore(int score){
 		this.roundOneScore = score;
 	}
 
+	// get player's score of the first round
 	public int getRoundOneScore(){
 		return this.roundOneScore;
 	}
 
+	// get player's score of the second round
 	public int getRoundTwoScore()
 	{
 		return roundTwoScore;
 	}
 
+	// save player's score of the second round
 	public void setRoundTwoScore(int roundTwoScore)
 	{
 		this.roundTwoScore = roundTwoScore;
 	}
 
+	// calculate and return a player's final score
 	public int getFinalScore(){
 		return roundOneScore + roundTwoScore;
 	}
@@ -106,14 +107,6 @@ public class Player {
 		setScore(score - points);
 	}
 	
-	// Prompt player to enter a choice among A, B, and C
-	char input() {
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Enter your choice: A, B, or C");
-		char res = sc.next().charAt(0);
-		return res;
-	}
-
 	/** Update player's score according to the correctness of response
 	 * @param res	boolean value of player's response
 	 */

@@ -114,9 +114,10 @@ public class Game {
 		return res;
 	} // end answerQuestion
 
-	/** display question and options retrieved from database
+	/** Retrieve current question
 	 *
 	 * @param category	selected category
+	 * @return question
 	*/
 	public String queryQ(String category) {
 		String question = "";
@@ -128,5 +129,5 @@ public class Game {
 			}
 		}
 		return question;
-	}
+	} // end queryQ
 } // end class game
