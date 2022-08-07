@@ -119,15 +119,14 @@ public class Game {
 	 * @param category	selected category
 	 * @return question
 	*/
-	public String queryQ(String category) {
+	public Question queryQ(String category) {
 		String question = "";
 
 		for(Category c : categoryList) {
 			if (c.getCategoryName().equals(category)) {
-				this.currQuestion = c.getAQuestion();
-				question = this.currQuestion.getQuestion();
+				this.currQuestion = c.getNextQuestion();
 			}
 		}
-		return question;
-	} // end queryQ
+		return this.currQuestion;
+	}
 } // end class game

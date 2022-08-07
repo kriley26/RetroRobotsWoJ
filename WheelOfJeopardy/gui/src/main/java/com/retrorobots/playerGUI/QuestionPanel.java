@@ -5,15 +5,7 @@
  */
 package com.retrorobots.playerGUI;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.retrorobots.ServerConnectorFactory;
 
 /**
  *
@@ -26,6 +18,7 @@ public class QuestionPanel extends javax.swing.JPanel {
      */
     public QuestionPanel() {
         initComponents();
+        getNewQuestionButton.setVisible(false);
     }
 
     /**
@@ -73,32 +66,16 @@ public class QuestionPanel extends javax.swing.JPanel {
 
     private void getNewQuestionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getNewQuestionButtonActionPerformed
 
-        try {
-            URL url = new URL("http://localhost:8080/question");
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("GET");
-            
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer content = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
-            } 
-            in.close();
-            con.disconnect();
-            
-            String labelFormat = "<html><body style='text-align: center; width: %1spx'>%1s";
-            this.questionLabel.setText(String.format(labelFormat, 300, content.toString()));
-            
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(QuestionPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ProtocolException ex) {
-            Logger.getLogger(QuestionPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(QuestionPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String content = ServerConnectorFactory.queryServer(ServerConnectorFactory.QUESTION_PATH);
+        String labelFormat = "<html><body style='text-align: center; width: %1spx'>%1s";
+        this.questionLabel.setText(String.format(labelFormat, 300, content.toString()));
         
     }//GEN-LAST:event_getNewQuestionButtonActionPerformed
+
+    public void updateQuestion(String data) {
+        String labelFormat = "<html><body style='text-align: center; width: %1spx'>%1s";
+        this.questionLabel.setText(String.format(labelFormat, 300, data.toString()));
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

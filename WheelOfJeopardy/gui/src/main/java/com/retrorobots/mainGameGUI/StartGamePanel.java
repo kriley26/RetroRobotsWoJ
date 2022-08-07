@@ -4,7 +4,13 @@
  */
 package com.retrorobots.mainGameGUI;
 
+import com.retrorobots.ServerConnectorFactory;
 import com.retrorobots.playerGUI.PlayerWindow;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -12,8 +18,10 @@ import com.retrorobots.playerGUI.PlayerWindow;
  */
 public class StartGamePanel extends javax.swing.JPanel {
 
-    private int playerCount;
+    private JSONObject curPlayer;
     private MainWindow main;
+    private List<String> categories;
+    private List<JSONObject> playerList;
     
     /**
      * Creates new form NewGamePanel
@@ -21,15 +29,20 @@ public class StartGamePanel extends javax.swing.JPanel {
     public StartGamePanel(MainWindow main) {
         initComponents();
         this.main = main;
+        this.categories = new ArrayList<>();
+        this.playerList = new ArrayList<>();
     }
     
     public int getPlayerCount() {
-        return this.playerCount;
+        return this.playerList.size();
     }
     
     private void createPlayerMenus() {
-        for (int i = 0; i < this.playerCount; i++) {
-            PlayerWindow pw = new PlayerWindow("Player " + (i+1));
+        for (JSONObject obj : playerList) {
+            PlayerWindow pw = new PlayerWindow(obj.getString("name"), categories);
+            if (obj.getString("name").equals(curPlayer.getString("name"))) {
+                pw.setActive(true);
+            }
         }
     }
 
@@ -114,11 +127,32 @@ public class StartGamePanel extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         
         int val = (int)this.jSpinner1.getModel().getValue();
-        this.playerCount = val;
+        String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.START_GAME_PATH+"?pCount="+val);
+        System.out.println(data);
+        parseGameData(data);
         createPlayerMenus();
         this.main.startGame();
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void parseGameData(String data) {
+        JSONObject game = new JSONObject(data);
+        JSONArray catArr = game.getJSONArray("categoryList");
+        for (int i = 0; i < catArr.length(); i++) {
+            JSONObject cat = catArr.getJSONObject(i);
+            String name = cat.getString("categoryName");
+            System.out.println(name);
+            categories.add(name);
+        }
+
+        curPlayer = game.getJSONObject("currPlayer");
+        JSONArray list = game.getJSONArray("playerList");
+        for (int i = 0; i < list.length(); i++) {
+            JSONObject player = list.getJSONObject(i);
+            playerList.add(player);
+        }
+
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

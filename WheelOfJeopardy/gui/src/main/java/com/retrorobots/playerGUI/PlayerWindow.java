@@ -4,7 +4,18 @@
  */
 package com.retrorobots.playerGUI;
 
+import com.retrorobots.ServerConnectorFactory;
+import com.retrorobots.playerGUI.gameWheel.MainWheel;
+import com.retrorobots.playerGUI.gameWheel.Wheel;
+import org.json.JSONObject;
+
+import javax.swing.*;
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -12,26 +23,55 @@ import java.awt.Dimension;
  */
 public class PlayerWindow extends javax.swing.JFrame {
 
+    private MainWheel wheel;
+    private boolean active = false;
+    private QuestionPanel qp;
+    private AnswerPanel ap;
+
     /**
      * Creates new form PlayerWindow
      */
-    public PlayerWindow(String playerName) {
-        setPreferredSize(new Dimension(500, 500));
+    public PlayerWindow(String playerName, List<String> cats) {
+        setPreferredSize(new Dimension(1000, 1000));
         setTitle(playerName);
         initComponents();
-        init();
+        init(cats);
         setVisible(true);
     }
-    
-    private void init() {
-        QuestionPanel qp = new QuestionPanel();
-        AnswerPanel ap = new AnswerPanel();
-        
+
+    private void init(List<String> cats) {
+        qp = new QuestionPanel();
+        ap = new AnswerPanel();
+
         this.topPanel.add(qp);
         this.topPanel.revalidate();
-        
+
         this.bottomPanel.add(ap);
         this.bottomPanel.revalidate();
+
+        try {
+            wheel = new MainWheel(cats);
+            wheel.hasBorders(true);
+            wheel.setBounds(this.wheelPanel.getX()/2, this.wheelPanel.getY()/2, 700, 700);
+            this.wheelPanel.add(wheel);
+            this.jPanel2.revalidate();
+            this.jPanel2.repaint();
+            this.wheelPanel.revalidate();
+            this.wheelPanel.repaint();
+
+        } catch (Exception ex) {
+            Logger.getLogger(PlayerWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void spinClicked() {
+        spinButton.setEnabled(false);
+        sendCategory.setEnabled(true);
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+        spinButton.setEnabled(active);
     }
 
     /**
@@ -44,11 +84,85 @@ public class PlayerWindow extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel2 = new javax.swing.JPanel();
+        wheelPanel = new javax.swing.JPanel();
+        controlPanel = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        spinButton = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        sendCategory = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
         topPanel = new javax.swing.JPanel();
         bottomPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        jPanel2.setLayout(new java.awt.GridBagLayout());
+
+        wheelPanel.setLayout(null);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        jPanel2.add(wheelPanel, gridBagConstraints);
+
+        controlPanel.setLayout(new java.awt.GridBagLayout());
+
+        jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        spinButton.setText("Spin");
+        spinButton.setEnabled(false);
+        spinButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                spinButtonActionPerformed(evt);
+            }
+        });
+        jPanel3.add(spinButton, new java.awt.GridBagConstraints());
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        controlPanel.add(jPanel3, gridBagConstraints);
+
+        jPanel4.setLayout(new java.awt.GridBagLayout());
+
+        sendCategory.setText("Request Question");
+        sendCategory.setEnabled(false);
+        sendCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendCategoryActionPerformed(evt);
+            }
+        });
+        jPanel4.add(sendCategory, new java.awt.GridBagConstraints());
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        controlPanel.add(jPanel4, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        jPanel2.add(controlPanel, gridBagConstraints);
+
+        jTabbedPane1.addTab("Game Board", jPanel2);
+
+        jPanel1.setLayout(new java.awt.GridBagLayout());
 
         topPanel.setLayout(new javax.swing.BoxLayout(topPanel, javax.swing.BoxLayout.LINE_AXIS));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -58,7 +172,7 @@ public class PlayerWindow extends javax.swing.JFrame {
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        getContentPane().add(topPanel, gridBagConstraints);
+        jPanel1.add(topPanel, gridBagConstraints);
 
         bottomPanel.setLayout(new javax.swing.BoxLayout(bottomPanel, javax.swing.BoxLayout.LINE_AXIS));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -68,10 +182,48 @@ public class PlayerWindow extends javax.swing.JFrame {
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        getContentPane().add(bottomPanel, gridBagConstraints);
+        jPanel1.add(bottomPanel, gridBagConstraints);
+
+        jTabbedPane1.addTab("Question", jPanel1);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        getContentPane().add(jTabbedPane1, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void spinButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spinButtonActionPerformed
+
+        double initialSpeed = 1000;
+        initialSpeed = (int)Math.signum(initialSpeed) * Math.min(Math.abs(initialSpeed), wheel.getMaxSpinSpeed());
+        try {
+            wheel.startSpinAsync(Math.abs(initialSpeed), (int)Math.signum(initialSpeed), -100);
+            spinClicked();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_spinButtonActionPerformed
+
+    private void sendCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendCategoryActionPerformed
+
+        if (wheel.isSpinning()) {
+            JOptionPane.showMessageDialog(this, "Wheel still spinning. Please wait.");
+            return;
+        }
+
+        String cat = wheel.getSelectedString();
+        String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.GET_QUESTION_PATH+"?cat="+cat);
+        System.out.println(data);
+        JSONObject jsonObject = new JSONObject(data);
+        this.qp.updateQuestion(jsonObject.getString("question"));
+        sendCategory.setEnabled(false);
+        this.jTabbedPane1.setSelectedIndex(1);
+
+    }//GEN-LAST:event_sendCategoryActionPerformed
 
     /**
      * @param args the command line arguments
@@ -103,13 +255,22 @@ public class PlayerWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PlayerWindow("0").setVisible(true);
+                new PlayerWindow("0", new ArrayList<>()).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bottomPanel;
+    private javax.swing.JPanel controlPanel;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JButton sendCategory;
+    private javax.swing.JButton spinButton;
     private javax.swing.JPanel topPanel;
+    private javax.swing.JPanel wheelPanel;
     // End of variables declaration//GEN-END:variables
 }

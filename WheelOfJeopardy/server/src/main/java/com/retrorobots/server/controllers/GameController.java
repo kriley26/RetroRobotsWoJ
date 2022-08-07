@@ -7,6 +7,7 @@ import com.retrorobots.server.wofj.Player;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
@@ -15,6 +16,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -24,9 +26,8 @@ public class GameController {
     private Game g;
 
     @RequestMapping("/startGame")
-    private List<String> startGame() throws IOException {
+    private Game startGame(@RequestParam int pCount) throws IOException {
         List<Category> categories = new ArrayList<>();
-        List<String> catNames = new ArrayList<>();
         g = new Game();
 
         // get categories and questions
@@ -65,12 +66,7 @@ public class GameController {
                 quests.add(new Question(id, show_number, air_date, round, category, value, question, answer));
             }
             categories.add(new Category(catName, quests));
-            catNames.add(catName);
         }
-
-//        for (Category cat : categories) {
-//            System.out.println(cat.getCategoryName() + " " + cat.getQuestions().get(1).getQuestion());
-//        }
 
         // add categories and questions to game
         for(Category c: categories){
@@ -79,11 +75,13 @@ public class GameController {
         // create players and add them to game
         //TODO to be updated with player's choice
         List<Player> playerList = new ArrayList<Player>();
-        playerList.add(new Player("p1"));
-        playerList.add(new Player("p2"));
+        for (int i = 0; i < pCount; i++) {
+            playerList.add(new Player("Player " + (i+1)));
+        }
         g.addPlayerList(playerList);
+        g.initRound();
 
-        return catNames;
+        return g;
     }
 
     @RequestMapping("/currentPlayer")
@@ -92,9 +90,8 @@ public class GameController {
     }
 
     @RequestMapping("/getQuestion")
-    public String getQuestion() {
-        String s = "";
-        return g.queryQ(s);
+    public Question getQuestion(@RequestParam String cat) {
+        return g.queryQ(cat);
     }
 
     @RequestMapping("/verifyAnswer")
@@ -110,12 +107,12 @@ public class GameController {
         }
     }
 
-    @RequestMapping("/freeturn")
+    @RequestMapping("/freeTurn")
     public void freeTurn(){
         g.getCurrPlayer().addToken();
     }
 
-    @RequestMapping("/loseturn")
+    @RequestMapping("/loseTurn")
     public String loseTurn() {
         Player player = g.nextPlayer();
         g.setCurrPlayer(player);
@@ -128,12 +125,12 @@ public class GameController {
         return loseTurn();
     }
 
-    @RequestMapping("/opponentschoice/player")
+    @RequestMapping("/opponentsChoice/player")
     public String oppoChoice() {
         return g.nextPlayer().getName();
     }
 
-    @RequestMapping("/opponentsChoice/Question")
+    @RequestMapping("/opponentsChoice/question")
     public String oppoChoiceQ() {
     // TODO
         return "";

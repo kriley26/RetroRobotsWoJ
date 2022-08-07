@@ -27,7 +27,7 @@ public class Category {
         return questions;
     }
 
-    public Question getAQuestion(){
+    public Question getNextQuestion(){
         return this.questions.get(questionNumber++);
     }
 

@@ -54,7 +54,6 @@ public class QuestionController {
             int int_random = rand.nextInt(upperbound);
             List<Question> tempList;
 
-            System.out.println(int_random);
             String category = list.remove(int_random);
             tempList = validateCategory(category);
             if (tempList.size() >= 5) {
@@ -64,13 +63,13 @@ public class QuestionController {
         }
 
         for(Category c : categories) {
-            System.out.println("Category Name: " + c.getCategoryName());
+            //System.out.println("Category Name: " + c.getCategoryName());
             int i = 1;
             for (Question q : c.getQuestions()) {
-                System.out.println("Question " + i + ": " + q.toString());
+                //System.out.println("Question " + i + ": " + q.toString());
                 i++;
             }
-            System.out.println();
+            //System.out.println();
             currentCats.add(c.getCategoryName());
         }
 
