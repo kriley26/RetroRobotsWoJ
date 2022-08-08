@@ -9,6 +9,8 @@ import com.retrorobots.mainGameGUI.MainWindow;
 import com.retrorobots.playerGUI.gameWheel.MainWheel;
 import com.retrorobots.playerGUI.gameWheel.Wheel;
 import com.retrorobots.server.wofj.Player;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -92,6 +94,15 @@ public class PlayerWindow extends javax.swing.JFrame {
     public void switchPlayers(String name) {
         this.setActive(false);
         this.main.updatePlayerFocus(name);
+    }
+
+    public void updatePlayers(JSONArray arr) {
+        List<JSONObject> list = new ArrayList<>();
+        for(int i = 0; i < arr.length(); i++) {
+            JSONObject jo = arr.getJSONObject(i);
+            list.add(jo);
+        }
+        this.main.updateCurrentStats(list);
     }
 
     /**
@@ -241,9 +252,14 @@ public class PlayerWindow extends javax.swing.JFrame {
 
         String cat = wheel.getSelectedString();
         String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.GET_QUESTION_PATH+"?cat="+cat);
-        System.out.println(data);
-        JSONObject jsonObject = new JSONObject(data);
-        this.qp.updateQuestion(jsonObject.getString("question"));
+        try {
+            JSONObject jsonObject = new JSONObject(data);
+            System.out.println(data);
+            this.qp.updateQuestion(jsonObject.getString("question"));
+        } catch (JSONException e) {
+            System.out.println(data);
+            e.printStackTrace();
+        }
         sendCategory.setEnabled(false);
         this.jTabbedPane1.setSelectedIndex(1);
 

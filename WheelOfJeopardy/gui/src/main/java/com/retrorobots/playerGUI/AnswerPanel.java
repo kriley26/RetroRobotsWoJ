@@ -6,6 +6,7 @@
 package com.retrorobots.playerGUI;
 
 import com.retrorobots.ServerConnectorFactory;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -40,7 +41,7 @@ public class AnswerPanel extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        submitAnswerButton = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -55,10 +56,10 @@ public class AnswerPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(15, 15, 15, 15);
         add(jTextField1, gridBagConstraints);
 
-        jButton1.setText("Submit");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        submitAnswerButton.setText("Submit");
+        submitAnswerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                submitAnswerButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -67,28 +68,32 @@ public class AnswerPanel extends javax.swing.JPanel {
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(15, 15, 15, 15);
-        add(jButton1, gridBagConstraints);
+        add(submitAnswerButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void submitAnswerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitAnswerButtonActionPerformed
 
         String data = this.jTextField1.getText();
         String returnData = ServerConnectorFactory.queryServer(ServerConnectorFactory.VERIFY_ANSWER_PATH+"?ans="+data);
         JSONObject anRes = new JSONObject(returnData);
         boolean correct = anRes.getBoolean("result");
+
+        JSONObject game = anRes.getJSONObject("game");
+        JSONArray players = game.getJSONArray("playerList");
         if (correct) {
             this.pw.spinAgain();
+            this.pw.updatePlayers(players);
         } else {
-            JSONObject game = anRes.getJSONObject("game");
             JSONObject currP = game.getJSONObject("currPlayer");
             this.pw.switchPlayers(currP.getString("name"));
+            this.pw.updatePlayers(players);
         }
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_submitAnswerButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton submitAnswerButton;
     // End of variables declaration//GEN-END:variables
 }

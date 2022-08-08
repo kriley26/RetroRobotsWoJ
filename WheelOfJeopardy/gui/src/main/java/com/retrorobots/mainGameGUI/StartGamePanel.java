@@ -49,6 +49,8 @@ public class StartGamePanel extends javax.swing.JPanel {
             }
             this.windMap.put(obj.getString("name"), pw);
         }
+        
+        this.main.updateCurrentStats(playerList);
     }
 
     public void updatePlayerWindow(String name) {
@@ -71,7 +73,7 @@ public class StartGamePanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
         initateGamePanel = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        startGameButton = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -110,10 +112,10 @@ public class StartGamePanel extends javax.swing.JPanel {
 
         initateGamePanel.setLayout(new java.awt.GridBagLayout());
 
-        jButton1.setText("Start Game");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        startGameButton.setText("Start Game");
+        startGameButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                startGameButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -123,7 +125,7 @@ public class StartGamePanel extends javax.swing.JPanel {
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        initateGamePanel.add(jButton1, gridBagConstraints);
+        initateGamePanel.add(startGameButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -135,16 +137,16 @@ public class StartGamePanel extends javax.swing.JPanel {
         add(initateGamePanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void startGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startGameButtonActionPerformed
         
         int val = (int)this.jSpinner1.getModel().getValue();
         String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.START_GAME_PATH+"?pCount="+val);
-        System.out.println(data);
+
         parseGameData(data);
         createPlayerMenus();
         this.main.startGame();
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_startGameButtonActionPerformed
 
     private void parseGameData(String data) {
         JSONObject game = new JSONObject(data);
@@ -152,7 +154,6 @@ public class StartGamePanel extends javax.swing.JPanel {
         for (int i = 0; i < catArr.length(); i++) {
             JSONObject cat = catArr.getJSONObject(i);
             String name = cat.getString("categoryName");
-            System.out.println(name);
             categories.add(name);
         }
 
@@ -168,9 +169,9 @@ public class StartGamePanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel initateGamePanel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JPanel playerCountPanel;
+    private javax.swing.JButton startGameButton;
     // End of variables declaration//GEN-END:variables
 }
