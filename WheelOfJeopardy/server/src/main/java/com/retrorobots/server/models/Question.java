@@ -5,10 +5,7 @@
  */
 package com.retrorobots.server.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  *
@@ -27,6 +24,9 @@ public class Question {
     private String value;
     private String question;
     private String answer;
+
+    @Transient
+    private int questionNumber;
 
     public Question() { }
 
@@ -105,8 +105,16 @@ public class Question {
         this.answer = answer;
     }
 
+    public int getQuestionNumber() {
+        return questionNumber;
+    }
+
+    public void setQuestionNumber(int questionNumber) {
+        this.questionNumber = questionNumber;
+    }
+
     @Override
     public String toString() {
-        return getQuestion();
+        return getQuestion() + " " + getQuestionNumber() + " " + getCategory();
     }
 }

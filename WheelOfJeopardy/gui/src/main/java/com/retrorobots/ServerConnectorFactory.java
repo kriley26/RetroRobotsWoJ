@@ -30,6 +30,9 @@ public class ServerConnectorFactory {
             if (request.contains(" ")) {
                 request = request.replace(" ", "%20");
             }
+            if (request.contains("\"")) {
+                request = request.replace("\"", "%22");
+            }
             URL url = new URL(MAIN_PATH+request);
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");

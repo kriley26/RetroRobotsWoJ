@@ -66,7 +66,7 @@ public class GameController {
 
                 quests.add(new Question(id, show_number, air_date, round, category, value, question, answer));
             }
-            categories.add(new Category(catName, quests));
+            categories.add(new Category(1, catName, quests));
         }
 
         // add categories and questions to game

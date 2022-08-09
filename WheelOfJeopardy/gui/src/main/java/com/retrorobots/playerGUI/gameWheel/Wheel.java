@@ -4,6 +4,8 @@
  */
 package com.retrorobots.playerGUI.gameWheel;
 
+import org.json.JSONObject;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -71,7 +73,7 @@ public class Wheel extends javax.swing.JPanel {
         initComponents();
     }
     
-    public Wheel(List<String> list) throws Exception {
+    public Wheel(List<JSONObject> list) throws Exception {
         this();
         setListOfStrings(list);
         
@@ -141,7 +143,16 @@ public class Wheel extends javax.swing.JPanel {
         return this.stringList;
     }
     
-    public void setListOfStrings(List<String> list) throws Exception {
+    public void setListOfStrings(List<JSONObject> l) throws Exception {
+        List<String> list = new ArrayList<>();
+        for (JSONObject jo : l) {
+            String name = jo.getString("categoryName");
+            list.add(name);
+        }
+        for (JSONObject jo : l) {
+            String name = jo.getString("categoryName");
+            list.add(name);
+        }
         this.noElem = list.size();
         if (this.noElem > LIMIT)
             throw new Exception("String list is larger than limit (" + LIMIT + ")");

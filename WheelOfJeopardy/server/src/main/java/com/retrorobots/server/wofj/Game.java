@@ -122,7 +122,9 @@ public class Game {
 	public Question queryQ(String category) {
 		for(Category c : categoryList) {
 			if (c.getCategoryName().equals(category)) {
-				this.currQuestion = c.getNextQuestion();
+				this.currQuestion = c.getCurrQuestion();
+				System.out.println(this.currQuestion);
+				c.getNextQuestion();
 			}
 		}
 		return this.currQuestion;
