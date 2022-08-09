@@ -11,7 +11,8 @@ public class ServerConnectorFactory {
     public static String MAIN_PATH = "http://localhost:8080";
 
     // game controller mappings
-    public static String START_GAME_PATH = "/startGame";
+    public static String START_GAME_PATH = "/startGame/roundOne";
+    public static String ROUND_TWO_PATH = "/startGame/roundTwo";
     public static String CURRENT_PLAYER_PATH = "/currentPlayer";
     public static String GET_QUESTION_PATH = "/getQuestion";
     public static String VERIFY_ANSWER_PATH = "/verifyAnswer";
@@ -32,6 +33,9 @@ public class ServerConnectorFactory {
             }
             if (request.contains("\"")) {
                 request = request.replace("\"", "%22");
+            }
+            if (request.contains("&")) {
+                request = request.replace("&", "\u0026");
             }
             URL url = new URL(MAIN_PATH+request);
             HttpURLConnection con = (HttpURLConnection)url.openConnection();

@@ -25,6 +25,7 @@ public class StartGamePanel extends javax.swing.JPanel {
     private List<JSONObject> playerList;
     private List<JSONObject> categoryList;
     private Map<String, PlayerWindow> windMap;
+    private int round = 1;
     
     /**
      * Creates new form NewGamePanel
@@ -63,6 +64,12 @@ public class StartGamePanel extends javax.swing.JPanel {
         for (String key : windMap.keySet()) {
             windMap.get(key).updateMainGameBoard(question);
         }
+    }
+
+    public void endRound() {
+        round++;
+        this.startGameButton.setEnabled(true);
+        requestFocus();
     }
 
     /**
@@ -145,12 +152,11 @@ public class StartGamePanel extends javax.swing.JPanel {
 
     private void startGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startGameButtonActionPerformed
         
-        int val = (int)this.jSpinner1.getModel().getValue();
-        String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.START_GAME_PATH+"?pCount="+val);
-
-        parseGameData(data);
-        createPlayerMenus();
-        this.main.startGame();
+        if (round == 1)
+            roundOne();
+        else if (round == 2)
+            roundTwo();
+        this.startGameButton.setEnabled(false);
 
     }//GEN-LAST:event_startGameButtonActionPerformed
 
@@ -169,6 +175,34 @@ public class StartGamePanel extends javax.swing.JPanel {
             playerList.add(player);
         }
 
+    }
+
+    private void clearGameData() {
+        playerList.clear();
+        categoryList.clear();
+    }
+
+    private void roundOne() {
+        int val = (int)this.jSpinner1.getModel().getValue();
+        String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.START_GAME_PATH+"?pCount="+val);
+        this.main.updateGame(new JSONObject(data));
+        parseGameData(data);
+        createPlayerMenus();
+        this.main.startGame();
+    }
+
+    private void roundTwo() {
+        String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.ROUND_TWO_PATH);
+        clearGameData();
+        this.main.updateGame(new JSONObject(data));
+        parseGameData(data);
+        for (String key : windMap.keySet()) {
+            windMap.get(key).newRound(categoryList);
+            if (key.equals(curPlayer.getString("name"))) {
+                windMap.get(key).setActive(true);
+            }
+        }
+        this.main.startGame();
     }
 
 

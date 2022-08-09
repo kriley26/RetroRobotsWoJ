@@ -28,6 +28,11 @@ public class AnswerPanel extends javax.swing.JPanel {
     public AnswerPanel(PlayerWindow pw) {
         this();
         this.pw = pw;
+        this.submitAnswerButton.setEnabled(false);
+    }
+
+    public void enableAnswer() {
+        this.submitAnswerButton.setEnabled(true);
     }
 
     /**
@@ -80,13 +85,26 @@ public class AnswerPanel extends javax.swing.JPanel {
 
         JSONObject game = anRes.getJSONObject("game");
         JSONArray players = game.getJSONArray("playerList");
+
+        int spinsLeft = game.getInt("spinCount");
+        int quesLeft = game.getInt("quesCount");
+
+        if (spinsLeft <= 0 || quesLeft <= 0) {
+            this.pw.endRound();
+            this.submitAnswerButton.setEnabled(false);
+            return;
+        }
+
         if (correct) {
             this.pw.spinAgain();
             this.pw.updatePlayers(players);
+            this.pw.updateGame(game);
         } else {
+            this.submitAnswerButton.setEnabled(false);
             JSONObject currP = game.getJSONObject("currPlayer");
             this.pw.switchPlayers(currP.getString("name"));
             this.pw.updatePlayers(players);
+            this.pw.updateGame(game);
         }
 
     }//GEN-LAST:event_submitAnswerButtonActionPerformed

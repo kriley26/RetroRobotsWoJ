@@ -16,10 +16,8 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +33,7 @@ public class PlayerWindow extends javax.swing.JFrame {
     private boolean active = false;
     private QuestionPanel qp;
     private AnswerPanel ap;
+    private Map<String, Integer> askQuestions = new HashMap<>();
 
     /**
      * Creates new form PlayerWindow
@@ -115,6 +114,21 @@ public class PlayerWindow extends javax.swing.JFrame {
 
     public void updateMainGameBoard(JSONObject question) {
         this.mgb.updateBoard(question);
+    }
+
+    public void updateGame(JSONObject game) {
+        this.main.updateGame(game);
+    }
+
+    public void endRound() {
+        this.setActive(false);
+        this.main.endRound();
+    }
+
+    public void newRound(List<JSONObject> categories) {
+        this.mgb.setCategoryList(categories);
+        this.mgb.newRound();
+        this.jTabbedPane1.setSelectedIndex(0);
     }
 
     /**
@@ -268,6 +282,14 @@ public class PlayerWindow extends javax.swing.JFrame {
         }
 
         String cat = wheel.getSelectedString();
+        String continueProcess = ServerConnectorFactory.queryServer("/availableQuestion?cat="+cat);
+        boolean con = Boolean.parseBoolean(continueProcess);
+        if (!con) {
+            this.spinButton.setEnabled(true);
+            this.sendCategory.setEnabled(false);
+            JOptionPane.showMessageDialog(this, "No question available for this category. Please spin again.");
+            return;
+        }
         String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.GET_QUESTION_PATH+"?cat="+cat);
         try {
             JSONObject jsonObject = new JSONObject(data);
@@ -280,6 +302,7 @@ public class PlayerWindow extends javax.swing.JFrame {
         sendCategory.setEnabled(false);
         this.main.updateGameBoards(new JSONObject(data));
         this.jTabbedPane1.setSelectedIndex(2);
+        this.ap.enableAnswer();
 
     }//GEN-LAST:event_sendCategoryActionPerformed
 

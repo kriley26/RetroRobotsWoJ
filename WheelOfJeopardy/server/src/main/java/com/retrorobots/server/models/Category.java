@@ -50,7 +50,11 @@ public class Category {
         return questions;
     }
 
-    public void getNextQuestion(){
+    public void getNextQuestion() {
+        if (questionCounter >= 5) {
+            questionCounter = 6;
+            return;
+        }
         this.currQuestion = this.questions.get(questionCounter++);
     }
 
