@@ -4,6 +4,8 @@
  */
 package com.retrorobots.playerGUI.gameWheel;
 
+import org.json.JSONObject;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Polygon;
@@ -22,12 +24,12 @@ public class MainWheel extends javax.swing.JPanel {
     /**
      * Creates new form MainWheel
      */
-    public MainWheel(List<String> categories) throws Exception {
+    public MainWheel(List<JSONObject> categories) throws Exception {
         initComponents();
         makeWheel(categories);
     }
     
-    private void makeWheel(List<String> categories) throws Exception {
+    private void makeWheel(List<JSONObject> categories) throws Exception {
         wheel = new Wheel(categories);
         wheel.setLayout(null);
         arrow = new SelectionArrow();
@@ -81,7 +83,7 @@ public class MainWheel extends javax.swing.JPanel {
         return wheel.getListOfStrings();
     }
     
-    public void setListOfStrings(List<String> list) throws Exception {
+    public void setListOfStrings(List<JSONObject> list) throws Exception {
         wheel.setListOfStrings(list);
     }
     

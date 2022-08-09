@@ -45,6 +45,10 @@ public class MainWindow extends javax.swing.JFrame {
     public void updateCurrentStats(List<JSONObject> players) {
         this.cgs.updatePlayers(players);
     }
+
+    public void updateGameBoards(JSONObject question) {
+        this.sgp.updateGameBoards(question);
+    }
     
     public void startGame() {
         this.jTabbedPane1.setSelectedIndex(1);

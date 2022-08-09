@@ -22,8 +22,8 @@ public class StartGamePanel extends javax.swing.JPanel {
 
     private JSONObject curPlayer;
     private MainWindow main;
-    private List<String> categories;
     private List<JSONObject> playerList;
+    private List<JSONObject> categoryList;
     private Map<String, PlayerWindow> windMap;
     
     /**
@@ -32,8 +32,8 @@ public class StartGamePanel extends javax.swing.JPanel {
     public StartGamePanel(MainWindow main) {
         initComponents();
         this.main = main;
-        this.categories = new ArrayList<>();
         this.playerList = new ArrayList<>();
+        this.categoryList = new ArrayList<>();
         this.windMap = new HashMap<>();
     }
     
@@ -43,7 +43,7 @@ public class StartGamePanel extends javax.swing.JPanel {
     
     private void createPlayerMenus() {
         for (JSONObject obj : playerList) {
-            PlayerWindow pw = new PlayerWindow(this.main, obj.getString("name"), categories);
+            PlayerWindow pw = new PlayerWindow(this.main, obj.getString("name"), categoryList);
             if (obj.getString("name").equals(curPlayer.getString("name"))) {
                 pw.setActive(true);
             }
@@ -56,6 +56,12 @@ public class StartGamePanel extends javax.swing.JPanel {
     public void updatePlayerWindow(String name) {
         if(windMap.containsKey(name)) {
             windMap.get(name).setActive(true);
+        }
+    }
+
+    public void updateGameBoards(JSONObject question) {
+        for (String key : windMap.keySet()) {
+            windMap.get(key).updateMainGameBoard(question);
         }
     }
 
@@ -153,8 +159,7 @@ public class StartGamePanel extends javax.swing.JPanel {
         JSONArray catArr = game.getJSONArray("categoryList");
         for (int i = 0; i < catArr.length(); i++) {
             JSONObject cat = catArr.getJSONObject(i);
-            String name = cat.getString("categoryName");
-            categories.add(name);
+            categoryList.add(cat);
         }
 
         curPlayer = game.getJSONObject("currPlayer");
