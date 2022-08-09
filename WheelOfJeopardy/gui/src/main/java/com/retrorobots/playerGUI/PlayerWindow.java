@@ -16,10 +16,8 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,8 +31,10 @@ public class PlayerWindow extends javax.swing.JFrame {
     private MainWheel wheel;
     private MainGameBoard mgb;
     private boolean active = false;
+    private boolean lastSpin = false;
     private QuestionPanel qp;
     private AnswerPanel ap;
+    private Map<String, Integer> askQuestions = new HashMap<>();
 
     /**
      * Creates new form PlayerWindow
@@ -67,10 +67,7 @@ public class PlayerWindow extends javax.swing.JFrame {
             wheel.hasBorders(true);
             wheel.setBounds(10, 10, 1000, 1000);
             this.wheelPanel.add(wheel, BorderLayout.CENTER);
-            this.jPanel2.revalidate();
-            this.jPanel2.repaint();
             this.wheelPanel.revalidate();
-            this.wheelPanel.repaint();
 
         } catch (Exception ex) {
             Logger.getLogger(PlayerWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,6 +112,45 @@ public class PlayerWindow extends javax.swing.JFrame {
 
     public void updateMainGameBoard(JSONObject question) {
         this.mgb.updateBoard(question);
+    }
+
+    public void updateGame(JSONObject game) {
+        this.main.updateGame(game);
+    }
+
+    public void endRound() {
+        this.setActive(false);
+        this.main.endRound();
+    }
+
+    public void endGame(JSONObject game) {
+        this.setActive(false);
+        List<JSONObject> list = new ArrayList<>();
+        for (int i = 0; i < game.getJSONArray("playerList").length(); i++) {
+            list.add(game.getJSONArray("playerList").getJSONObject(i));
+        }
+        this.main.updateCurrentStats(list);
+        this.main.endGame();
+
+    }
+
+    public void newRound(List<JSONObject> categories) {
+        this.mgb.setCategoryList(categories);
+        this.mgb.newRound();
+        this.wheelPanel.remove(wheel);
+        try {
+            wheel = new MainWheel(categories);
+            wheel.hasBorders(true);
+            wheel.setBounds(10, 10, 1000, 1000);
+            this.wheel.revalidate();
+            this.wheelPanel.add(wheel, BorderLayout.CENTER);
+            this.wheelPanel.revalidate();
+            this.wheel.repaint();
+            this.main.updateTabs();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.jTabbedPane1.setSelectedIndex(0);
     }
 
     /**
@@ -252,6 +288,12 @@ public class PlayerWindow extends javax.swing.JFrame {
         int int_random = rand.nextInt(upperbound);
         double initialSpeed = base + (int_random*15);
         initialSpeed = (int)Math.signum(initialSpeed) * Math.min(Math.abs(initialSpeed), wheel.getMaxSpinSpeed());
+        String data = ServerConnectorFactory.queryServer("/takeTurn");
+        JSONObject game = new JSONObject(data);
+        this.updateGame(game);
+        if (game.getInt("spinCount") <= 0) {
+            this.lastSpin = true;
+        }
         try {
             wheel.startSpinAsync(Math.abs(initialSpeed), (int)Math.signum(initialSpeed), -100);
             spinClicked();
@@ -268,6 +310,23 @@ public class PlayerWindow extends javax.swing.JFrame {
         }
 
         String cat = wheel.getSelectedString();
+        String continueProcess = ServerConnectorFactory.queryServer("/availableQuestion?cat="+cat);
+        boolean con = Boolean.parseBoolean(continueProcess);
+        if (!con) {
+            this.spinButton.setEnabled(!lastSpin);
+            this.sendCategory.setEnabled(false);
+            JOptionPane.showMessageDialog(this, "No question available for this category. Please spin again.");
+            if (lastSpin) {
+                String data = ServerConnectorFactory.queryServer("/endRoundByTurn");
+                if (data.equalsIgnoreCase("end of Game")) {
+                    String d = ServerConnectorFactory.queryServer("/getActiveGame");
+                    this.endGame(new JSONObject(d));
+                } else {
+                    this.endRound();
+                }
+            }
+            return;
+        }
         String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.GET_QUESTION_PATH+"?cat="+cat);
         try {
             JSONObject jsonObject = new JSONObject(data);
@@ -280,6 +339,7 @@ public class PlayerWindow extends javax.swing.JFrame {
         sendCategory.setEnabled(false);
         this.main.updateGameBoards(new JSONObject(data));
         this.jTabbedPane1.setSelectedIndex(2);
+        this.ap.enableAnswer();
 
     }//GEN-LAST:event_sendCategoryActionPerformed
 

@@ -62,15 +62,45 @@ public class Game {
 		this.playerList = lst;
 	}
 
-	public void initRound() {
-			this.currRound++;
-			this.currPlayer = playerList.size() > 0 ? playerList.get(0) : null;
-			this.spinCount = 50;
-			this.quesCount = 30;
+	public void initRoundOne() {
+		this.currRound++;
+		this.currPlayer = playerList.size() > 0 ? playerList.get(0) : null;
+		this.spinCount = 5;
+		this.quesCount = 10;
+	}
+
+	public void initRoundTwo() {
+		this.currRound++;
+		this.currPlayer = lowestPoints();
+		this.spinCount = 5;
+		this.quesCount = 10;
+	}
+
+	private Player lowestPoints() {
+		Player minPlay = null;
+		int min = Integer.MAX_VALUE;
+		for (Player p : playerList) {
+			if (p.getRoundOneScore() < min) {
+				min = p.getRoundOneScore();
+				minPlay = p;
+			}
+		}
+		return minPlay;
+
+	}
+
+	public void wipeCategories() {
+		this.categoryList.clear();
 	}
 
 	public boolean endRoundCheck(){
 		return spinCount <= 0 || quesCount <= 0;
+	}
+
+	public void savePlayerData() {
+		for (Player p : playerList) {
+			p.saveRoundScore(currRound);
+		}
 	}
 
 	public void takeTurn() {
@@ -105,7 +135,7 @@ public class Game {
 	// return boolean value if player's answer correct/wrong
 
 	public boolean answerQuestion(String answer){
-		boolean res = answer.equals(currQuestion.getAnswer());
+		boolean res = answer.equalsIgnoreCase(currQuestion.getAnswer());
 		String[] arr = this.currQuestion.getValue().split("\\$");
 		String val = arr[1];
 		int points = Integer.parseInt(val);
@@ -128,5 +158,28 @@ public class Game {
 			}
 		}
 		return this.currQuestion;
+	}
+
+	public boolean validQuestionAvail(String category) {
+		for (Category c : categoryList) {
+			if (c.getCategoryName().equals(category)) {
+				if (c.getQuestionCounter() <=5) {
+					if (c.getQuestionCounter() == 5)
+						c.getNextQuestion();
+					return true;
+				}
+				else
+					return false;
+			}
+		}
+		return false;
+	}
+
+	public int getCurrRound() {
+		return currRound;
+	}
+
+	public void setCurrRound(int currRound) {
+		this.currRound = currRound;
 	}
 } // end class game

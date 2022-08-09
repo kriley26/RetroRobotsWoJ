@@ -5,12 +5,15 @@
  */
 package com.retrorobots.mainGameGUI;
 
+import com.retrorobots.ServerConnectorFactory;
 import com.retrorobots.playerGUI.AnswerPanel;
 import com.retrorobots.playerGUI.QuestionPanel;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -41,6 +44,17 @@ public class MainWindow extends javax.swing.JFrame {
         this.currentGameInterior.add(cgs);
         this.currentGameInterior.revalidate();
     }
+
+    public void updateGame(JSONObject game) {
+        this.cgs.updateGame(game);
+        JSONArray players = game.getJSONArray("playerList");
+        List<JSONObject> list = new ArrayList<>();
+        for(int i = 0; i < players.length(); i++) {
+            JSONObject jo = players.getJSONObject(i);
+            list.add(jo);
+        }
+        updateCurrentStats(list);
+    }
     
     public void updateCurrentStats(List<JSONObject> players) {
         this.cgs.updatePlayers(players);
@@ -56,6 +70,25 @@ public class MainWindow extends javax.swing.JFrame {
 
     public void updatePlayerFocus(String name) {
         this.sgp.updatePlayerWindow(name);
+    }
+
+    public void endRound() {
+        this.sgp.endRound();
+        this.jTabbedPane1.setSelectedIndex(0);
+    }
+
+    public void updateTabs() {
+        this.jTabbedPane1.setSelectedIndex(1);
+        this.jTabbedPane1.setSelectedIndex(0);
+    }
+
+    public void endGame() {
+        this.sgp.disableSgp();
+        String data = ServerConnectorFactory.queryServer("/endGame");
+        System.out.println(data);
+        JSONObject plyer = new JSONObject(data);
+        JOptionPane.showMessageDialog(this, plyer.getString("name")
+                + " won the game with " + (plyer.getInt("roundOneScore")+plyer.getInt("roundTwoScore")));
     }
 
     /**

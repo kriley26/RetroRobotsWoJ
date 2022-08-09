@@ -70,6 +70,10 @@ public class MainGameBoard extends javax.swing.JPanel {
         cardPanels[4][4] = c5FivePanel;
 
 
+        makeBoard();
+    }
+
+    public void makeBoard() {
         for(int i = 0; i < 5; i++) {
             JSONObject category = this.categoryList.get(i);
             String name = category.getString("categoryName");
@@ -80,6 +84,11 @@ public class MainGameBoard extends javax.swing.JPanel {
                 JSONObject question = questionList.getJSONObject(j);
                 ValueCard vc = new ValueCard(question);
                 JPanel card = cardPanels[i][j];
+                if (card.getComponents().length > 0) {
+                    for (Component c : card.getComponents()) {
+                        card.remove(c);
+                    }
+                }
                 card.setLayout(new BorderLayout());
                 card.add(vc, BorderLayout.CENTER);
                 cells.put(card, vc);
@@ -93,6 +102,14 @@ public class MainGameBoard extends javax.swing.JPanel {
         int qNum = question.getInt("questionNumber");
         int colNum = columns.get(cat);
         cells.get(cardPanels[colNum][qNum]).setAnswered(true);
+    }
+
+    public void setCategoryList(List<JSONObject> list) {
+        this.categoryList = list;
+    }
+
+    public void newRound() {
+        makeBoard();
     }
 
     /**

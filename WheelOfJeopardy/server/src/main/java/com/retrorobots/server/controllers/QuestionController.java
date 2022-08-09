@@ -48,7 +48,6 @@ public class QuestionController {
         List<Category> categories = new ArrayList<>();
         Random rand = new Random();
 
-        System.out.println();
         while (categories.size() < 5) {
             int upperbound = list.size();
             int int_random = rand.nextInt(upperbound);
@@ -56,24 +55,12 @@ public class QuestionController {
 
             String category = list.remove(int_random);
             tempList = validateCategory(category);
-            if (tempList.size() >= 5) {
-                //currentCats.add(category);
-                categories.add(new Category(category, tempList));
+            while (category.contains("&") || tempList.size() < 5) {
+                category = list.remove(int_random);
+                tempList = validateCategory(category);
             }
+            categories.add(new Category(category, tempList));
         }
-
-        for(Category c : categories) {
-            //System.out.println("Category Name: " + c.getCategoryName());
-            int i = 1;
-            for (Question q : c.getQuestions()) {
-                //System.out.println("Question " + i + ": " + q.toString());
-                i++;
-            }
-            //System.out.println();
-            currentCats.add(c.getCategoryName());
-        }
-
-
         return categories;
     }
 
