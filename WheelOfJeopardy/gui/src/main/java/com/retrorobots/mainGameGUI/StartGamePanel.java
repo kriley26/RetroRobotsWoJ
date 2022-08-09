@@ -72,6 +72,10 @@ public class StartGamePanel extends javax.swing.JPanel {
         requestFocus();
     }
 
+    public void disableSgp() {
+        this.startGameButton.setEnabled(false);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -162,6 +166,7 @@ public class StartGamePanel extends javax.swing.JPanel {
 
     private void parseGameData(String data) {
         JSONObject game = new JSONObject(data);
+        System.out.println(game);
         JSONArray catArr = game.getJSONArray("categoryList");
         for (int i = 0; i < catArr.length(); i++) {
             JSONObject cat = catArr.getJSONObject(i);
@@ -183,15 +188,18 @@ public class StartGamePanel extends javax.swing.JPanel {
     }
 
     private void roundOne() {
+        System.out.println("round 1");
         int val = (int)this.jSpinner1.getModel().getValue();
         String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.START_GAME_PATH+"?pCount="+val);
         this.main.updateGame(new JSONObject(data));
         parseGameData(data);
         createPlayerMenus();
         this.main.startGame();
+        this.jSpinner1.setEnabled(false);
     }
 
     private void roundTwo() {
+        System.out.println("round 2");
         String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.ROUND_TWO_PATH);
         clearGameData();
         this.main.updateGame(new JSONObject(data));

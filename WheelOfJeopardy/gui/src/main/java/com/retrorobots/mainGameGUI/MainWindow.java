@@ -5,13 +5,13 @@
  */
 package com.retrorobots.mainGameGUI;
 
+import com.retrorobots.ServerConnectorFactory;
 import com.retrorobots.playerGUI.AnswerPanel;
 import com.retrorobots.playerGUI.QuestionPanel;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -75,6 +75,20 @@ public class MainWindow extends javax.swing.JFrame {
     public void endRound() {
         this.sgp.endRound();
         this.jTabbedPane1.setSelectedIndex(0);
+    }
+
+    public void updateTabs() {
+        this.jTabbedPane1.setSelectedIndex(1);
+        this.jTabbedPane1.setSelectedIndex(0);
+    }
+
+    public void endGame() {
+        this.sgp.disableSgp();
+        String data = ServerConnectorFactory.queryServer("/endGame");
+        System.out.println(data);
+        JSONObject plyer = new JSONObject(data);
+        JOptionPane.showMessageDialog(this, plyer.getString("name")
+                + " won the game with " + (plyer.getInt("roundOneScore")+plyer.getInt("roundTwoScore")));
     }
 
     /**

@@ -65,15 +65,15 @@ public class Game {
 	public void initRoundOne() {
 		this.currRound++;
 		this.currPlayer = playerList.size() > 0 ? playerList.get(0) : null;
-		this.spinCount = 50;
-		this.quesCount = 25;
+		this.spinCount = 5;
+		this.quesCount = 10;
 	}
 
 	public void initRoundTwo() {
 		this.currRound++;
 		this.currPlayer = lowestPoints();
-		this.spinCount = 50;
-		this.quesCount = 25;
+		this.spinCount = 5;
+		this.quesCount = 10;
 	}
 
 	private Player lowestPoints() {
@@ -173,5 +173,13 @@ public class Game {
 			}
 		}
 		return false;
+	}
+
+	public int getCurrRound() {
+		return currRound;
+	}
+
+	public void setCurrRound(int currRound) {
+		this.currRound = currRound;
 	}
 } // end class game

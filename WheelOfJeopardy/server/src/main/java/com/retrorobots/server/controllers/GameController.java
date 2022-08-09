@@ -80,7 +80,6 @@ public class GameController {
         }
         g.addPlayerList(playerList);
         g.initRoundOne();
-
         return g;
     }
 
@@ -134,6 +133,11 @@ public class GameController {
         return g;
     }
 
+    @RequestMapping("/getActiveGame")
+    public Game getActiveGame() {
+        return g;
+    }
+
     @RequestMapping("/currentPlayer")
     public String currentPlayer(){
         return g.getCurrPlayer().getName();
@@ -144,9 +148,32 @@ public class GameController {
         return g.validQuestionAvail(cat);
     }
 
+    @RequestMapping("/takeTurn")
+    public Game takeTurn() {
+        g.takeTurn();
+        return g;
+    }
+
+    @RequestMapping("/endRoundByTurn")
+    public String endRoundByTurn() {
+        if (g.endRoundCheck()) {
+            g.savePlayerData();
+        }
+        return checkRound();
+    }
+
+    @RequestMapping("/checkRound")
+    public String checkRound() {
+        return g.getCurrRound() < 2 ? " " : "end of Game";
+    }
+
+    @RequestMapping("/endGame")
+    public Player endGame() {
+        return g.winCheck();
+    }
+
     @RequestMapping("/getQuestion")
     public Question getQuestion(@RequestParam String cat) {
-        g.takeTurn();
         return g.queryQ(cat);
     }
 

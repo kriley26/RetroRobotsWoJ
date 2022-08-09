@@ -90,6 +90,12 @@ public class AnswerPanel extends javax.swing.JPanel {
         int quesLeft = game.getInt("quesCount");
 
         if (spinsLeft <= 0 || quesLeft <= 0) {
+            String end = ServerConnectorFactory.queryServer("/checkRound");
+            if (end.equalsIgnoreCase("end of Game")) {
+                this.pw.endGame(game);
+                this.submitAnswerButton.setEnabled((false));
+                return;
+            }
             this.pw.endRound();
             this.submitAnswerButton.setEnabled(false);
             return;
@@ -97,15 +103,13 @@ public class AnswerPanel extends javax.swing.JPanel {
 
         if (correct) {
             this.pw.spinAgain();
-            this.pw.updatePlayers(players);
-            this.pw.updateGame(game);
         } else {
             this.submitAnswerButton.setEnabled(false);
             JSONObject currP = game.getJSONObject("currPlayer");
             this.pw.switchPlayers(currP.getString("name"));
-            this.pw.updatePlayers(players);
-            this.pw.updateGame(game);
         }
+        this.pw.updatePlayers(players);
+        this.pw.updateGame(game);
 
     }//GEN-LAST:event_submitAnswerButtonActionPerformed
 

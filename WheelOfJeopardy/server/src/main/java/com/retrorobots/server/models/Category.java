@@ -25,10 +25,13 @@ public class Category {
         this.questionCounter = 0;
 
         for (int i = 0; i < 5; i++) {
-            Random rand = new Random();
-            int max = q.size();
-            int int_rand = rand.nextInt(max);
-            Question quest = q.remove(int_rand);
+            Question quest = null;
+            while (quest == null ||  quest.getAnswer().contains("&")) {
+                Random rand = new Random();
+                int max = q.size();
+                int int_rand = rand.nextInt(max);
+                quest = q.remove(int_rand);
+            }
             int cashInt = (i+1) * (200*round);
             String cash = "$"+cashInt;
             quest.setValue(cash);

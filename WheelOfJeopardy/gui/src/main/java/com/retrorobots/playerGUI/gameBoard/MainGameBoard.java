@@ -84,6 +84,11 @@ public class MainGameBoard extends javax.swing.JPanel {
                 JSONObject question = questionList.getJSONObject(j);
                 ValueCard vc = new ValueCard(question);
                 JPanel card = cardPanels[i][j];
+                if (card.getComponents().length > 0) {
+                    for (Component c : card.getComponents()) {
+                        card.remove(c);
+                    }
+                }
                 card.setLayout(new BorderLayout());
                 card.add(vc, BorderLayout.CENTER);
                 cells.put(card, vc);
