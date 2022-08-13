@@ -199,14 +199,14 @@ public class GameController {
     }
 
     @RequestMapping("/loseTurn")
-    public String loseTurn() {
+    public Game loseTurn() {
         Player player = g.nextPlayer();
         g.setCurrPlayer(player);
-        return player.getName();
+        return g;
     }
 
     @RequestMapping("/bankrupt")
-    public String bankrupt() {
+    public Game bankrupt() {
         g.getCurrPlayer().setScore(0);
         return loseTurn();
     }

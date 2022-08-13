@@ -310,10 +310,44 @@ public class PlayerWindow extends javax.swing.JFrame {
         }
 
         String cat = wheel.getSelectedString();
+        String data;
         switch (cat.toLowerCase()) {
+            case ("lose turn"):
+                data = ServerConnectorFactory.queryServer(ServerConnectorFactory.LOSE_TURN_PATH);
+                JSONObject game = new JSONObject(data);
+                JSONObject currPlayer = game.getJSONObject("currPlayer");
+                switchPlayers(currPlayer.getString("name"));
+                break;
+            case ("spin again"):
+                spinAgain("Please spin again.");
+                break;
+            case ("free turn"):
+                data = ServerConnectorFactory.queryServer(ServerConnectorFactory.FREE_TURN_PATH);
+                spinAgain("Free Token added. Please spin again.");
+                break;
             case ("bankrupt"):
+                data = ServerConnectorFactory.queryServer(ServerConnectorFactory.BANKRUPT_PATH);
+                JSONObject game1 = new JSONObject(data);
+                JSONObject currPlayer1 = game1.getJSONObject("currPlayer");
+                switchPlayers(currPlayer1.getString("name"));
+                break;
+            case ("player choice"):
+                data = "";
+
+                // get player choice with new Popup GUI
+
+                sendCategory(data);
+                break;
+            case ("opponent choice"):
+                data = ServerConnectorFactory.queryServer(ServerConnectorFactory.OPPONENTS_CHOICE_PLAYER_PATH);
+
+                // Query category from next player with new Popup GUI
+
+                sendCategory(data);
+                break;
             default:
                 sendCategory(cat);
+                break;
         }
 
 
@@ -323,19 +357,7 @@ public class PlayerWindow extends javax.swing.JFrame {
         String continueProcess = ServerConnectorFactory.queryServer("/availableQuestion?cat="+cat);
         boolean con = Boolean.parseBoolean(continueProcess);
         if (!con) {
-            this.spinButton.setEnabled(!lastSpin);
-            this.sendCategory.setEnabled(false);
-            JOptionPane.showMessageDialog(this, "No question available for this category. Please spin again.");
-            if (lastSpin) {
-                String data = ServerConnectorFactory.queryServer("/endRoundByTurn");
-                if (data.equalsIgnoreCase("end of Game")) {
-                    String d = ServerConnectorFactory.queryServer("/getActiveGame");
-                    this.endGame(new JSONObject(d));
-                } else {
-                    this.endRound();
-                }
-            }
-            return;
+            spinAgain("No question available for this category. Please spin again.");
         }
         String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.GET_QUESTION_PATH+"?cat="+cat);
         try {
@@ -350,6 +372,22 @@ public class PlayerWindow extends javax.swing.JFrame {
         this.main.updateGameBoards(new JSONObject(data));
         this.jTabbedPane1.setSelectedIndex(2);
         this.ap.enableAnswer();
+    }
+
+    private void spinAgain(String message) {
+        this.spinButton.setEnabled(!lastSpin);
+        this.sendCategory.setEnabled(false);
+        JOptionPane.showMessageDialog(this, message);
+        if (lastSpin) {
+            String data = ServerConnectorFactory.queryServer("/endRoundByTurn");
+            if (data.equalsIgnoreCase("end of Game")) {
+                String d = ServerConnectorFactory.queryServer("/getActiveGame");
+                this.endGame(new JSONObject(d));
+            } else {
+                this.endRound();
+            }
+        }
+        return;
     }
 
     /**
