@@ -310,6 +310,16 @@ public class PlayerWindow extends javax.swing.JFrame {
         }
 
         String cat = wheel.getSelectedString();
+        switch (cat.toLowerCase()) {
+            case ("bankrupt"):
+            default:
+                sendCategory(cat);
+        }
+
+
+    }//GEN-LAST:event_sendCategoryActionPerformed
+
+    private void sendCategory(String cat) {
         String continueProcess = ServerConnectorFactory.queryServer("/availableQuestion?cat="+cat);
         boolean con = Boolean.parseBoolean(continueProcess);
         if (!con) {
@@ -340,8 +350,7 @@ public class PlayerWindow extends javax.swing.JFrame {
         this.main.updateGameBoards(new JSONObject(data));
         this.jTabbedPane1.setSelectedIndex(2);
         this.ap.enableAnswer();
-
-    }//GEN-LAST:event_sendCategoryActionPerformed
+    }
 
     /**
      * @param args the command line arguments

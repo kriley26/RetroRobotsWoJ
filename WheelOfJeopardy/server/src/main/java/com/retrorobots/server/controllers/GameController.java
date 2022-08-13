@@ -215,10 +215,4 @@ public class GameController {
     public String oppoChoice() {
         return g.nextPlayer().getName();
     }
-
-    @RequestMapping("/opponentsChoice/question")
-    public String oppoChoiceQ() {
-    // TODO
-        return "";
-    }
 }

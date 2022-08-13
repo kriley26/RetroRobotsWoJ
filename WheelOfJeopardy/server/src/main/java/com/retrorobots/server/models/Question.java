@@ -6,6 +6,7 @@
 package com.retrorobots.server.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  *
@@ -27,6 +28,9 @@ public class Question {
 
     @Transient
     private int questionNumber;
+
+    @Transient
+    private List<String> wrongAns;
 
     public Question() { }
 
@@ -111,6 +115,18 @@ public class Question {
 
     public void setQuestionNumber(int questionNumber) {
         this.questionNumber = questionNumber;
+    }
+
+    public List<String> getWrongAns() {
+        return wrongAns;
+    }
+
+    public void setWrongAns(List<String> wrongAns) {
+        this.wrongAns = wrongAns;
+    }
+
+    public void addWrongAns(String ans) {
+        this.wrongAns.add(ans);
     }
 
     @Override
