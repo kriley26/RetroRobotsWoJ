@@ -6,6 +6,10 @@
 package com.retrorobots.playerGUI;
 
 import com.retrorobots.ServerConnectorFactory;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import javax.swing.JButton;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,23 +20,44 @@ import org.json.JSONObject;
 public class AnswerPanel extends javax.swing.JPanel {
 
     private PlayerWindow pw;
+    private List<JButton> jbuts;
 
     /**
      * Creates new form AnswerPanel
      */
     public AnswerPanel() {
+        this(null);
+    }
+    
+    public AnswerPanel(PlayerWindow pw) {
         initComponents();
-        this.pw = null;
+        this.pw = pw;
+        init();
+        enableAllButtons(false);  
+    }
+    
+    public void init() {
+        jbuts = new ArrayList<>();
+        jbuts.add(answerOneButton);
+        jbuts.add(answerTwoButton);
+        jbuts.add(answerThreeButton);
     }
 
-    public AnswerPanel(PlayerWindow pw) {
-        this();
-        this.pw = pw;
-        this.submitAnswerButton.setEnabled(false);
+    public void updateAnswers(String correctAns, JSONArray incorrectAns) {
+        Random rand = new Random();
+        int pos = rand.nextInt(jbuts.size());
+        JButton correctButton = jbuts.get(pos);
+        correctButton.setText(correctAns);
+
+        JButton wrongButton1 = pos-1 >= 0 ? jbuts.get(pos-1) : jbuts.get(jbuts.size()-1);
+        JButton wrongButton2 = pos+1 <= jbuts.size()-1 ? jbuts.get(pos+1) : jbuts.get(0);
+
+        wrongButton1.setText(incorrectAns.getString(0));
+        wrongButton2.setText(incorrectAns.getString(1));
     }
 
     public void enableAnswer() {
-        this.submitAnswerButton.setEnabled(true);
+        enableAllButtons(true);
     }
 
     /**
@@ -45,26 +70,16 @@ public class AnswerPanel extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jTextField1 = new javax.swing.JTextField();
-        submitAnswerButton = new javax.swing.JButton();
+        answerOneButton = new javax.swing.JButton();
+        answerTwoButton = new javax.swing.JButton();
+        answerThreeButton = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField1.setText("Enter Answer:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.3;
-        gridBagConstraints.insets = new java.awt.Insets(15, 15, 15, 15);
-        add(jTextField1, gridBagConstraints);
-
-        submitAnswerButton.setText("Submit");
-        submitAnswerButton.addActionListener(new java.awt.event.ActionListener() {
+        answerOneButton.setText("Answer 1");
+        answerOneButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                submitAnswerButtonActionPerformed(evt);
+                answerOneButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -73,12 +88,58 @@ public class AnswerPanel extends javax.swing.JPanel {
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(15, 15, 15, 15);
-        add(submitAnswerButton, gridBagConstraints);
+        add(answerOneButton, gridBagConstraints);
+
+        answerTwoButton.setText("jButton1");
+        answerTwoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                answerTwoButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(15, 15, 15, 15);
+        add(answerTwoButton, gridBagConstraints);
+
+        answerThreeButton.setText("jButton2");
+        answerThreeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                answerThreeButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(15, 15, 15, 15);
+        add(answerThreeButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void submitAnswerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitAnswerButtonActionPerformed
+    private void answerOneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_answerOneButtonActionPerformed
 
-        String data = this.jTextField1.getText();
+        String data = this.answerOneButton.getText();
+        sendAnswer(data);
+
+    }//GEN-LAST:event_answerOneButtonActionPerformed
+
+    private void answerTwoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_answerTwoButtonActionPerformed
+        String data = this.answerTwoButton.getText();
+        sendAnswer(data);
+    }//GEN-LAST:event_answerTwoButtonActionPerformed
+
+    private void answerThreeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_answerThreeButtonActionPerformed
+        
+        String data = this.answerThreeButton.getText();
+        sendAnswer(data);
+    }//GEN-LAST:event_answerThreeButtonActionPerformed
+
+    
+    
+    private void sendAnswer(String data) {
         String returnData = ServerConnectorFactory.queryServer(ServerConnectorFactory.VERIFY_ANSWER_PATH+"?ans="+data);
         JSONObject anRes = new JSONObject(returnData);
         boolean correct = anRes.getBoolean("result");
@@ -93,29 +154,40 @@ public class AnswerPanel extends javax.swing.JPanel {
             String end = ServerConnectorFactory.queryServer("/checkRound");
             if (end.equalsIgnoreCase("end of Game")) {
                 this.pw.endGame(game);
-                this.submitAnswerButton.setEnabled((false));
+                enableAllButtons(false);
                 return;
             }
             this.pw.endRound();
-            this.submitAnswerButton.setEnabled(false);
+            enableAllButtons(false);
             return;
         }
 
         if (correct) {
             this.pw.spinAgain();
         } else {
-            this.submitAnswerButton.setEnabled(false);
+            enableAllButtons(false);
             JSONObject currP = game.getJSONObject("currPlayer");
             this.pw.switchPlayers(currP.getString("name"));
         }
         this.pw.updatePlayers(players);
         this.pw.updateGame(game);
-
-    }//GEN-LAST:event_submitAnswerButtonActionPerformed
-
+    }
+    
+    private void enableAllButtons(boolean enable) {
+        this.answerOneButton.setEnabled(enable);
+        this.answerTwoButton.setEnabled(enable);
+        this.answerThreeButton.setEnabled(enable);
+    }
+    
+    private void resetButtons() {
+        this.answerOneButton.setText("Answer 1");
+        this.answerTwoButton.setText("Answer 2");
+        this.answerThreeButton.setText("Answer 3");
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JButton submitAnswerButton;
+    private javax.swing.JButton answerOneButton;
+    private javax.swing.JButton answerThreeButton;
+    private javax.swing.JButton answerTwoButton;
     // End of variables declaration//GEN-END:variables
 }

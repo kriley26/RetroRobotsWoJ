@@ -6,6 +6,7 @@
 package com.retrorobots.server.models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +33,9 @@ public class Question {
     @Transient
     private List<String> wrongAns;
 
-    public Question() { }
+    public Question() {
+        this(0, 0, null, null, null, null, null, null);
+    }
 
     public Question(int id, int show_number, String air_date, String round, String category, String value, String question, String answer) {
         this.id = id;
@@ -43,6 +46,7 @@ public class Question {
         this.value = value;
         this.question = question;
         this.answer = answer;
+        this.wrongAns = new ArrayList<>();
     }
 
     public int getId() {
@@ -127,6 +131,15 @@ public class Question {
 
     public void addWrongAns(String ans) {
         this.wrongAns.add(ans);
+    }
+
+    public boolean isStringInWrongAns(String an) {
+        for (String s : wrongAns) {
+            if (s.equals(an)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

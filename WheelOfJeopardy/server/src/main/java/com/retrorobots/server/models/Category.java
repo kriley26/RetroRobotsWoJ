@@ -32,11 +32,28 @@ public class Category {
                 int int_rand = rand.nextInt(max);
                 quest = q.remove(int_rand);
             }
+            quest.setWrongAns(new ArrayList<>());
             int cashInt = (i+1) * (200*round);
             String cash = "$"+cashInt;
             quest.setValue(cash);
             quest.setQuestionNumber(i);
             this.questions.add(i, quest);
+        }
+
+        for (int i = 0; i < 5; i++) {
+            Random rand = new Random();
+            Question qt = this.questions.get(i);
+            while (qt.getWrongAns().size() < 2) {
+                int max = this.questions.size()-1;
+                int int_rand = rand.nextInt(max);
+                if (int_rand == i) {
+                    int_rand += 1;
+                }
+                String answer = this.questions.get(int_rand).getAnswer();
+                if (!qt.isStringInWrongAns(answer)) {
+                    qt.addWrongAns(answer);
+                }
+            }
         }
         this.currQuestion = this.questions.get(this.questionCounter++);
     }

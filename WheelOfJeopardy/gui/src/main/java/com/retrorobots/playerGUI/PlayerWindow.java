@@ -349,8 +349,6 @@ public class PlayerWindow extends javax.swing.JFrame {
                 sendCategory(cat);
                 break;
         }
-
-
     }//GEN-LAST:event_sendCategoryActionPerformed
 
     private void sendCategory(String cat) {
@@ -363,7 +361,9 @@ public class PlayerWindow extends javax.swing.JFrame {
         try {
             JSONObject jsonObject = new JSONObject(data);
             System.out.println(data);
+
             this.qp.updateQuestion(jsonObject.getString("question"));
+            this.ap.updateAnswers(jsonObject.getString("answer"), jsonObject.getJSONArray("wrongAns"));
         } catch (JSONException e) {
             System.out.println(data);
             e.printStackTrace();

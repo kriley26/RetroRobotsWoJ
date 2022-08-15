@@ -26,13 +26,6 @@ public class QuestionController {
     @Autowired
     private QuestionRepository questionRepository;
 
-    private String q1 = "What is for lunch?";
-
-    @RequestMapping("/lunch")
-    public String lunch() {
-        return q1;
-    }
-
     @RequestMapping("/question")
     public String getNewQuestion() {
         Random rand = new Random();
