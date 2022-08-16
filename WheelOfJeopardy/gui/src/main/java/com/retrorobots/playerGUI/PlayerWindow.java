@@ -343,6 +343,13 @@ public class PlayerWindow extends javax.swing.JFrame {
                 message = "Please select the category you wish to answer.";
                 cs = new CategorySelector(this, true, message, categories);
                 cs.setVisible(true);
+                while(cs.isVisible()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 data = cs.getSelectedCat();
                 sendCategory(data);
                 break;
@@ -355,6 +362,13 @@ public class PlayerWindow extends javax.swing.JFrame {
                 PlayerWindow pw = this.main.getPlayerWindow(data);
                 cs = new CategorySelector(pw, true, message, categories);
                 cs.setVisible(true);
+                while(cs.isVisible()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 data = cs.getSelectedCat();
 
                 sendCategory(data);
