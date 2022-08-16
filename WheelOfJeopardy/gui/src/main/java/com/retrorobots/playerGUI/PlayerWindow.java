@@ -9,6 +9,7 @@ import com.retrorobots.mainGameGUI.MainWindow;
 import com.retrorobots.playerGUI.gameBoard.MainGameBoard;
 import com.retrorobots.playerGUI.gameWheel.MainWheel;
 import com.retrorobots.playerGUI.gameWheel.Wheel;
+import com.retrorobots.playerGUI.popups.CategorySelector;
 import com.retrorobots.server.wofj.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +36,7 @@ public class PlayerWindow extends javax.swing.JFrame {
     private QuestionPanel qp;
     private AnswerPanel ap;
     private Map<String, Integer> askQuestions = new HashMap<>();
+    private List<String> categories = new ArrayList<>();
 
     /**
      * Creates new form PlayerWindow
@@ -61,6 +63,10 @@ public class PlayerWindow extends javax.swing.JFrame {
 
         this.bottomPanel.add(ap);
         this.bottomPanel.revalidate();
+
+        for (JSONObject jo : cats) {
+            categories.add(jo.getString("categoryName"));
+        }
 
         try {
             wheel = new MainWheel(cats);
@@ -311,6 +317,8 @@ public class PlayerWindow extends javax.swing.JFrame {
 
         String cat = wheel.getSelectedString();
         String data;
+        CategorySelector cs;
+        String message;
         switch (cat.toLowerCase()) {
             case ("lose turn"):
                 data = ServerConnectorFactory.queryServer(ServerConnectorFactory.LOSE_TURN_PATH);
@@ -331,17 +339,21 @@ public class PlayerWindow extends javax.swing.JFrame {
                 JSONObject currPlayer1 = game1.getJSONObject("currPlayer");
                 switchPlayers(currPlayer1.getString("name"));
                 break;
-            case ("player choice"):
-                data = "";
-
-                // get player choice with new Popup GUI
-
+            case ("player's choice"):
+                message = "Please select the category you wish to answer.";
+                cs = new CategorySelector(this, true, message, categories);
+                data = cs.getSelectedCat();
                 sendCategory(data);
                 break;
-            case ("opponent choice"):
+            case ("opponent's choice"):
                 data = ServerConnectorFactory.queryServer(ServerConnectorFactory.OPPONENTS_CHOICE_PLAYER_PATH);
 
+                message = "Please select the category for " + getTitle() + ".";
+
                 // Query category from next player with new Popup GUI
+                PlayerWindow pw = this.main.getPlayerWindow(data);
+                cs = new CategorySelector(pw, true, message, categories);
+                data = cs.getSelectedCat();
 
                 sendCategory(data);
                 break;

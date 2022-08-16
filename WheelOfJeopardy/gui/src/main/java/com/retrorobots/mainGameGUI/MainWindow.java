@@ -7,6 +7,7 @@ package com.retrorobots.mainGameGUI;
 
 import com.retrorobots.ServerConnectorFactory;
 import com.retrorobots.playerGUI.AnswerPanel;
+import com.retrorobots.playerGUI.PlayerWindow;
 import com.retrorobots.playerGUI.QuestionPanel;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -89,6 +90,10 @@ public class MainWindow extends javax.swing.JFrame {
         JSONObject plyer = new JSONObject(data);
         JOptionPane.showMessageDialog(this, plyer.getString("name")
                 + " won the game with " + (plyer.getInt("roundOneScore")+plyer.getInt("roundTwoScore")));
+    }
+
+    public PlayerWindow getPlayerWindow(String player) {
+        return this.sgp.getPlayerWindow(player);
     }
 
     /**

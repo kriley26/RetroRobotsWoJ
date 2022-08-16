@@ -153,6 +153,12 @@ public class Wheel extends javax.swing.JPanel {
             String name = jo.getString("categoryName");
             list.add(name);
         }
+        list.add("Free Turn");
+        list.add("Lose Turn");
+        list.add("Bankrupt");
+        list.add("Player's Choice");
+        list.add("Opponent's Choice");
+        list.add("Spin Again");
         this.noElem = list.size();
         if (this.noElem > LIMIT)
             throw new Exception("String list is larger than limit (" + LIMIT + ")");

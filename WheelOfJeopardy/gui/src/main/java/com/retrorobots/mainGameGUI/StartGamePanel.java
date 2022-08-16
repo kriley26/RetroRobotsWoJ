@@ -66,6 +66,13 @@ public class StartGamePanel extends javax.swing.JPanel {
         }
     }
 
+    public PlayerWindow getPlayerWindow(String player) {
+        if (windMap.containsKey(player)) {
+            return windMap.get(player);
+        }
+        return null;
+    }
+
     public void endRound() {
         round++;
         this.startGameButton.setEnabled(true);
