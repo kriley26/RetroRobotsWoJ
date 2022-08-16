@@ -342,6 +342,7 @@ public class PlayerWindow extends javax.swing.JFrame {
             case ("player's choice"):
                 message = "Please select the category you wish to answer.";
                 cs = new CategorySelector(this, true, message, categories);
+                cs.setVisible(true);
                 data = cs.getSelectedCat();
                 sendCategory(data);
                 break;
@@ -353,6 +354,7 @@ public class PlayerWindow extends javax.swing.JFrame {
                 // Query category from next player with new Popup GUI
                 PlayerWindow pw = this.main.getPlayerWindow(data);
                 cs = new CategorySelector(pw, true, message, categories);
+                cs.setVisible(true);
                 data = cs.getSelectedCat();
 
                 sendCategory(data);
