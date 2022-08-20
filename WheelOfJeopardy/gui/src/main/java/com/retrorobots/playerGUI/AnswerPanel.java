@@ -9,7 +9,8 @@ import com.retrorobots.ServerConnectorFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javax.swing.JButton;
+import javax.swing.*;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -162,9 +163,20 @@ public class AnswerPanel extends javax.swing.JPanel {
             return;
         }
 
-        if (correct) {
+        String hasFreeToken = ServerConnectorFactory.queryServer(ServerConnectorFactory.CHECK_PLAYER_FREE_TOKEN);
+
+        if (correct || Boolean.parseBoolean(hasFreeToken)) {
+            if (!correct && Boolean.parseBoolean(hasFreeToken)) {
+                
+            }
             this.pw.spinAgain();
         } else {
+            if (Boolean.parseBoolean(hasFreeToken)) {
+                int choice = JOptionPane.showConfirmDialog(this, "Would you like to use your Free Turn Token now?");
+                if (choice == JOptionPane.YES_OPTION) {
+                    this.pw.spinAgain();
+                }
+            }
             enableAllButtons(false);
             JSONObject currP = game.getJSONObject("currPlayer");
             this.pw.switchPlayers(currP.getString("name"));

@@ -20,6 +20,7 @@ public class ServerConnectorFactory {
     public static String LOSE_TURN_PATH = "/loseTurn";
     public static String BANKRUPT_PATH = "/bankrupt";
     public static String OPPONENTS_CHOICE_PLAYER_PATH = "/opponentsChoice/player";
+    public static String CHECK_PLAYER_FREE_TOKEN = "/freeTurn/player";
 
     // question controller mappings
     public static String QUESTION_PATH = "/question";

@@ -198,6 +198,11 @@ public class GameController {
         return g.getCurrPlayer().addToken();
     }
 
+    @RequestMapping("/freeTurn/player")
+    public Boolean freeTurnPlayer() {
+        return g.getCurrPlayer().getToken() > 0;
+    }
+
     @RequestMapping("/loseTurn")
     public Game loseTurn() {
         Player player = g.nextPlayer();

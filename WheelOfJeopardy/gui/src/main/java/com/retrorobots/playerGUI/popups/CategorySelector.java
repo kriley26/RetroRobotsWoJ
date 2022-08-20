@@ -27,6 +27,7 @@ public class CategorySelector extends javax.swing.JDialog {
     
     public CategorySelector(java.awt.Frame parent, boolean modal, String message, List<String> categories) {
         super(parent, modal);
+        setLocationRelativeTo(parent);
         setPreferredSize(new Dimension(600, 250));
         initComponents();
         this.messageLabel.setText(message);

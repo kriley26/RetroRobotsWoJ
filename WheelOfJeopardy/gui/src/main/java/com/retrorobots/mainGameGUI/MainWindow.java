@@ -31,6 +31,7 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() {
         setPreferredSize(new Dimension(500, 500));
+        setLocationRelativeTo(null);
         initComponents();
         init();
         setVisible(true);

@@ -67,9 +67,7 @@ public class PlayerWindow extends javax.swing.JFrame {
         this.bottomPanel.add(ap);
         this.bottomPanel.revalidate();
 
-        for (JSONObject jo : cats) {
-            categories.add(jo.getString("categoryName"));
-        }
+        updateCategoryList(cats);
 
         try {
             wheel = new MainWheel(cats);
@@ -126,7 +124,6 @@ public class PlayerWindow extends javax.swing.JFrame {
                 this.endRound();
             }
         }
-        return;
     }
 
     public void switchPlayers(String name) {
@@ -171,6 +168,7 @@ public class PlayerWindow extends javax.swing.JFrame {
     public void newRound(List<JSONObject> categories) {
         this.mgb.setCategoryList(categories);
         this.mgb.newRound();
+        this.updateCategoryList(categories);
         this.wheelPanel.remove(wheel);
         try {
             wheel = new MainWheel(categories);
@@ -193,6 +191,12 @@ public class PlayerWindow extends javax.swing.JFrame {
             e.printStackTrace();
         }
         this.jTabbedPane1.setSelectedIndex(0);
+    }
+
+    private void updateCategoryList(List<JSONObject> cats) {
+        for (JSONObject jo : cats) {
+            categories.add(jo.getString("categoryName"));
+        }
     }
 
     /**
@@ -358,6 +362,7 @@ public class PlayerWindow extends javax.swing.JFrame {
         String data;
         CategorySelector cs;
         String message;
+        boolean validChoice;
         switch (cat.toLowerCase()) {
             case ("lose turn"):
                 data = ServerConnectorFactory.queryServer(ServerConnectorFactory.LOSE_TURN_PATH);
@@ -381,42 +386,47 @@ public class PlayerWindow extends javax.swing.JFrame {
                 data = ServerConnectorFactory.queryServer(ServerConnectorFactory.BANKRUPT_PATH);
                 JSONObject game1 = new JSONObject(data);
                 JSONObject currPlayer1 = game1.getJSONObject("currPlayer");
-                this.main.updateGameBoards(new JSONObject(data));
+                this.main.updateGame(new JSONObject(data));
                 switchPlayers(currPlayer1.getString("name"));
                 break;
             case ("player's choice"):
-                message = "Please select the category you wish to answer.";
-                cs = new CategorySelector(this, true, message, categories);
-                cs.setVisible(true);
-                while(cs.isVisible()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch(Exception e) {
-                        e.printStackTrace();
+                validChoice = false;
+                while (!validChoice) {
+                    message = "Please select the category you wish to answer.";
+                    cs = new CategorySelector(this, true, message, categories);
+                    cs.setVisible(true);
+                    while (cs.isVisible()) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
+                    data = cs.getSelectedCat();
+                    validChoice = sendCategory(data);
                 }
-                data = cs.getSelectedCat();
-                sendCategory(data);
                 break;
             case ("opponent's choice"):
                 data = ServerConnectorFactory.queryServer(ServerConnectorFactory.OPPONENTS_CHOICE_PLAYER_PATH);
-
                 message = "Please select the category for " + getTitle() + ".";
+                validChoice = false;
 
                 // Query category from next player with new Popup GUI
-                PlayerWindow pw = this.main.getPlayerWindow(data);
-                cs = new CategorySelector(pw, true, message, categories);
-                cs.setVisible(true);
-                while(cs.isVisible()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch(Exception e) {
-                        e.printStackTrace();
+                while (!validChoice) {
+                    PlayerWindow pw = this.main.getPlayerWindow(data);
+                    cs = new CategorySelector(pw, true, message, categories);
+                    cs.setVisible(true);
+                    while (cs.isVisible()) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-                data = cs.getSelectedCat();
+                    data = cs.getSelectedCat();
 
-                sendCategory(data);
+                    validChoice = sendCategory(data);
+                }
                 break;
             default:
                 sendCategory(cat);
@@ -424,27 +434,29 @@ public class PlayerWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_sendCategoryActionPerformed
 
-    private void sendCategory(String cat) {
+    private boolean sendCategory(String cat) {
         String continueProcess = ServerConnectorFactory.queryServer("/availableQuestion?cat="+cat);
         boolean con = Boolean.parseBoolean(continueProcess);
         if (!con) {
             spinAgain("No question available for this category. Please spin again.");
+            return false;
         }
         String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.GET_QUESTION_PATH+"?cat="+cat);
         try {
             JSONObject jsonObject = new JSONObject(data);
-            System.out.println(data);
+            LOGGER.info(data);
 
             this.qp.updateQuestion(jsonObject.getString("question"));
             this.ap.updateAnswers(jsonObject.getString("answer"), jsonObject.getJSONArray("wrongAns"));
         } catch (JSONException e) {
-            System.out.println(data);
+            LOGGER.error(data);
             e.printStackTrace();
         }
         sendCategory.setEnabled(false);
         this.main.updateGameBoards(new JSONObject(data));
         this.jTabbedPane1.setSelectedIndex(2);
         this.ap.enableAnswer();
+        return true;
     }
 
     /**
