@@ -14,19 +14,21 @@ import com.retrorobots.server.wofj.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author KeeganRiley
  */
 public class PlayerWindow extends javax.swing.JFrame {
+    private Logger LOGGER = LoggerFactory.getLogger(PlayerWindow.class );
 
     private MainWindow main;
     private MainWheel wheel;
@@ -37,6 +39,7 @@ public class PlayerWindow extends javax.swing.JFrame {
     private AnswerPanel ap;
     private Map<String, Integer> askQuestions = new HashMap<>();
     private List<String> categories = new ArrayList<>();
+    private int wheelSides = 750;
 
     /**
      * Creates new form PlayerWindow
@@ -46,7 +49,7 @@ public class PlayerWindow extends javax.swing.JFrame {
     }
 
     public PlayerWindow(MainWindow main, String playerName, List<JSONObject> cats) {
-        setPreferredSize(new Dimension(1075, 1250));
+        setPreferredSize(new Dimension(1250, 1250));
         setTitle(playerName);
         initComponents();
         init(cats);
@@ -71,12 +74,12 @@ public class PlayerWindow extends javax.swing.JFrame {
         try {
             wheel = new MainWheel(cats);
             wheel.hasBorders(true);
-            wheel.setBounds(10, 10, 1000, 1000);
+            wheel.setBounds(10, 10, wheelSides, wheelSides);
             this.wheelPanel.add(wheel, BorderLayout.CENTER);
             this.wheelPanel.revalidate();
 
         } catch (Exception ex) {
-            Logger.getLogger(PlayerWindow.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.info(PlayerWindow.class.getName(), ex);
         }
 
 
@@ -147,7 +150,7 @@ public class PlayerWindow extends javax.swing.JFrame {
         try {
             wheel = new MainWheel(categories);
             wheel.hasBorders(true);
-            wheel.setBounds(10, 10, 1000, 1000);
+            wheel.setBounds(10, 10, wheelSides, wheelSides);
             this.wheel.revalidate();
             this.wheelPanel.add(wheel, BorderLayout.CENTER);
             this.wheelPanel.revalidate();

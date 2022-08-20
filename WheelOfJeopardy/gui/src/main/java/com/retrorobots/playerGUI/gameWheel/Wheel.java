@@ -5,6 +5,8 @@
 package com.retrorobots.playerGUI.gameWheel;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -64,7 +66,7 @@ public class Wheel extends javax.swing.JPanel {
     private int refreshRate = 100;
     private Point2D mouseDragPosition;
     
-    
+    Logger LOGGER = LoggerFactory.getLogger(Wheel.class);
 
     /**
      * Creates new form Wheel
@@ -85,6 +87,7 @@ public class Wheel extends javax.swing.JPanel {
     @Override
     public void setBounds(int x, int y, int width, int height) {
         image = null;
+        LOGGER.info("Wheel setBounds");
         super.setBounds(x, y, width, height);
     }
     
@@ -238,10 +241,9 @@ public class Wheel extends javax.swing.JPanel {
         int width = this.getWidth(), height = this.getHeight();
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = (Graphics2D) img.getGraphics();
-        
         radius = Math.min(img.getWidth(), img.getHeight()) / 2 - BORDER;
         
-        double stringDistanceFromEdge = 0.05 * radius;
+        double stringDistanceFromEdge = 0.1 * radius;
         int fontSize, stringWidth, maxStringWidth;
         
         maxStringWidth = (int)(radius - 2 * stringDistanceFromEdge);

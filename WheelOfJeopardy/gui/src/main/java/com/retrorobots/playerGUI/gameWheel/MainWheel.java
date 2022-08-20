@@ -5,6 +5,8 @@
 package com.retrorobots.playerGUI.gameWheel;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -17,6 +19,7 @@ import java.util.List;
  * @author KeeganRiley
  */
 public class MainWheel extends javax.swing.JPanel {
+    Logger LOGGER = LoggerFactory.getLogger(MainWheel.class);
     
     private Wheel wheel;
     private SelectionArrow arrow;

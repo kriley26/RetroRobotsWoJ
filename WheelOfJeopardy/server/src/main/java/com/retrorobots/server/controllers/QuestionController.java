@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  *
@@ -36,9 +34,9 @@ public class QuestionController {
 
     @RequestMapping("/categories")
     public List<Category> getCategories() {
-        List<String> list = questionRepository.findDistinctCategory();
-        List<String> currentCats = new ArrayList<>();
+        List<String> list = questionRepository.findCategoryGT4();
         List<Category> categories = new ArrayList<>();
+        Set<String> catSet = new HashSet<>();
         Random rand = new Random();
 
         while (categories.size() < 5) {
@@ -48,10 +46,11 @@ public class QuestionController {
 
             String category = list.remove(int_random);
             tempList = validateCategory(category);
-            while (category.contains("&") || tempList.size() < 5) {
+            while (category.contains("&") || tempList.size() < 5 || catSet.contains(category)) {
                 category = list.remove(int_random);
                 tempList = validateCategory(category);
             }
+            catSet.add(category);
             categories.add(new Category(category, tempList));
         }
         return categories;

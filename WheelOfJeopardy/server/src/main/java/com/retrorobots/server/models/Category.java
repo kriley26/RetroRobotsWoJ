@@ -26,7 +26,10 @@ public class Category {
 
         for (int i = 0; i < 5; i++) {
             Question quest = null;
-            while (quest == null ||  quest.getAnswer().contains("&")) {
+            while (quest == null ||  quest.getAnswer().contains("&") ) {
+                if (q.size() < 0) {
+                    continue;
+                }
                 Random rand = new Random();
                 int max = q.size();
                 int int_rand = rand.nextInt(max);

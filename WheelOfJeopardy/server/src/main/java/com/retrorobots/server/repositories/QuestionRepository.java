@@ -17,6 +17,9 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     @Query("SELECT DISTINCT q.category FROM Question q WHERE q.round = \'Jeopardy!\'")
     List<String> findDistinctCategory();
 
+    @Query("select q.category from Question as q where q.round = 'Jeopardy!' group by category having count(*) > 4 ")
+    List<String> findCategoryGT4();
+
     @Query("SELECT q from Question q where q.round = \'Jeopardy!\' AND q.category = ?1")
     List<Question> findCategoryQuestions(String category);
 }

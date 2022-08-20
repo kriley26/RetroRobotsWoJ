@@ -8,6 +8,8 @@ import com.retrorobots.ServerConnectorFactory;
 import com.retrorobots.playerGUI.PlayerWindow;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +21,7 @@ import java.util.Map;
  * @author KeeganRiley
  */
 public class StartGamePanel extends javax.swing.JPanel {
+    private Logger LOGGER = LoggerFactory.getLogger(StartGamePanel.class);
 
     private JSONObject curPlayer;
     private MainWindow main;
@@ -173,7 +176,7 @@ public class StartGamePanel extends javax.swing.JPanel {
 
     private void parseGameData(String data) {
         JSONObject game = new JSONObject(data);
-        System.out.println(game);
+        LOGGER.info(game.toString());
         JSONArray catArr = game.getJSONArray("categoryList");
         for (int i = 0; i < catArr.length(); i++) {
             JSONObject cat = catArr.getJSONObject(i);
@@ -195,7 +198,7 @@ public class StartGamePanel extends javax.swing.JPanel {
     }
 
     private void roundOne() {
-        System.out.println("round 1");
+        LOGGER.info("round 1");
         int val = (int)this.jSpinner1.getModel().getValue();
         String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.START_GAME_PATH+"?pCount="+val);
         this.main.updateGame(new JSONObject(data));
@@ -206,7 +209,7 @@ public class StartGamePanel extends javax.swing.JPanel {
     }
 
     private void roundTwo() {
-        System.out.println("round 2");
+        LOGGER.info("round 2");
         String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.ROUND_TWO_PATH);
         clearGameData();
         this.main.updateGame(new JSONObject(data));
