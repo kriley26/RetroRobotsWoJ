@@ -39,7 +39,7 @@ public class PlayerWindow extends javax.swing.JFrame {
     private AnswerPanel ap;
     private Map<String, Integer> askQuestions = new HashMap<>();
     private List<String> categories = new ArrayList<>();
-    private int wheelSides = 750;
+    private int wheelSides = 1000;
 
     /**
      * Creates new form PlayerWindow
@@ -75,7 +75,15 @@ public class PlayerWindow extends javax.swing.JFrame {
             wheel = new MainWheel(cats);
             wheel.hasBorders(true);
             wheel.setBounds(10, 10, wheelSides, wheelSides);
-            this.wheelPanel.add(wheel, BorderLayout.CENTER);
+            java.awt.GridBagConstraints gridBagConstraints;
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 0;
+            gridBagConstraints.gridy = 0;
+            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+            gridBagConstraints.weightx = 0.1;
+            gridBagConstraints.weighty = 1.0;
+            gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+            this.wheelPanel.add(wheel, gridBagConstraints);
             this.wheelPanel.revalidate();
 
         } catch (Exception ex) {
@@ -105,8 +113,25 @@ public class PlayerWindow extends javax.swing.JFrame {
         this.jTabbedPane1.setSelectedIndex(0);
     }
 
+    private void spinAgain(String message) {
+        this.spinButton.setEnabled(!lastSpin);
+        this.sendCategory.setEnabled(false);
+        JOptionPane.showMessageDialog(this, message);
+        if (lastSpin) {
+            String data = ServerConnectorFactory.queryServer("/endRoundByTurn");
+            if (data.equalsIgnoreCase("end of Game")) {
+                String d = ServerConnectorFactory.queryServer("/getActiveGame");
+                this.endGame(new JSONObject(d));
+            } else {
+                this.endRound();
+            }
+        }
+        return;
+    }
+
     public void switchPlayers(String name) {
         this.setActive(false);
+        this.sendCategory.setEnabled(false);
         this.main.updatePlayerFocus(name);
     }
 
@@ -152,7 +177,15 @@ public class PlayerWindow extends javax.swing.JFrame {
             wheel.hasBorders(true);
             wheel.setBounds(10, 10, wheelSides, wheelSides);
             this.wheel.revalidate();
-            this.wheelPanel.add(wheel, BorderLayout.CENTER);
+            java.awt.GridBagConstraints gridBagConstraints;
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 0;
+            gridBagConstraints.gridy = 0;
+            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+            gridBagConstraints.weightx = 0.1;
+            gridBagConstraints.weighty = 1.0;
+            gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+            this.wheelPanel.add(wheel, gridBagConstraints);
             this.wheelPanel.revalidate();
             this.wheel.repaint();
             this.main.updateTabs();
@@ -192,6 +225,9 @@ public class PlayerWindow extends javax.swing.JFrame {
 
         wheelPanel.setLayout(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 1.0;
@@ -334,12 +370,18 @@ public class PlayerWindow extends javax.swing.JFrame {
                 break;
             case ("free turn"):
                 data = ServerConnectorFactory.queryServer(ServerConnectorFactory.FREE_TURN_PATH);
-                spinAgain("Free Token added. Please spin again.");
+                if (Boolean.parseBoolean(data)) {
+                    spinAgain("Free Token added. Please spin again.");
+                } else {
+                    spinAgain("You already have a Free Token. Please spin again");
+                }
                 break;
             case ("bankrupt"):
+                JOptionPane.showMessageDialog(this, "Sorry you are now bankrupt!");
                 data = ServerConnectorFactory.queryServer(ServerConnectorFactory.BANKRUPT_PATH);
                 JSONObject game1 = new JSONObject(data);
                 JSONObject currPlayer1 = game1.getJSONObject("currPlayer");
+                this.main.updateGameBoards(new JSONObject(data));
                 switchPlayers(currPlayer1.getString("name"));
                 break;
             case ("player's choice"):
@@ -403,22 +445,6 @@ public class PlayerWindow extends javax.swing.JFrame {
         this.main.updateGameBoards(new JSONObject(data));
         this.jTabbedPane1.setSelectedIndex(2);
         this.ap.enableAnswer();
-    }
-
-    private void spinAgain(String message) {
-        this.spinButton.setEnabled(!lastSpin);
-        this.sendCategory.setEnabled(false);
-        JOptionPane.showMessageDialog(this, message);
-        if (lastSpin) {
-            String data = ServerConnectorFactory.queryServer("/endRoundByTurn");
-            if (data.equalsIgnoreCase("end of Game")) {
-                String d = ServerConnectorFactory.queryServer("/getActiveGame");
-                this.endGame(new JSONObject(d));
-            } else {
-                this.endRound();
-            }
-        }
-        return;
     }
 
     /**

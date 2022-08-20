@@ -18,10 +18,7 @@ import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
  *
@@ -65,7 +62,7 @@ public class Wheel extends javax.swing.JPanel {
     private double rotationAngleStart, rotationAngleEnd;
     private int refreshRate = 100;
     private Point2D mouseDragPosition;
-    
+
     Logger LOGGER = LoggerFactory.getLogger(Wheel.class);
 
     /**
@@ -87,7 +84,6 @@ public class Wheel extends javax.swing.JPanel {
     @Override
     public void setBounds(int x, int y, int width, int height) {
         image = null;
-        LOGGER.info("Wheel setBounds");
         super.setBounds(x, y, width, height);
     }
     
@@ -166,11 +162,24 @@ public class Wheel extends javax.swing.JPanel {
         if (this.noElem > LIMIT)
             throw new Exception("String list is larger than limit (" + LIMIT + ")");
         this.delta = (double)360 / (double)this.noElem;
-        this.stringList = list;
+        this.stringList = randomizeList(list);
         this.image = null;
         this.spinOnOff = false;
         setRotationAngle(0);
         this.repaint();
+    }
+
+    private List<String> randomizeList(List<String> list) {
+        List<String> retList = new ArrayList<>();
+        Random rand = new Random();
+
+        while (list.size() > 0) {
+            int pos = rand.nextInt(list.size());
+            String str = list.remove(pos);
+            retList.add(str);
+        }
+
+        return retList;
     }
     
     @Override

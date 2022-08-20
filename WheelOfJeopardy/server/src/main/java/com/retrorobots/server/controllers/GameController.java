@@ -194,8 +194,8 @@ public class GameController {
     }
 
     @RequestMapping("/freeTurn")
-    public void freeTurn(){
-        g.getCurrPlayer().addToken();
+    public Boolean freeTurn(){
+        return g.getCurrPlayer().addToken();
     }
 
     @RequestMapping("/loseTurn")

@@ -4,6 +4,7 @@
  */
 package com.retrorobots.playerGUI.popups;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
@@ -26,6 +27,7 @@ public class CategorySelector extends javax.swing.JDialog {
     
     public CategorySelector(java.awt.Frame parent, boolean modal, String message, List<String> categories) {
         super(parent, modal);
+        setPreferredSize(new Dimension(600, 250));
         initComponents();
         this.messageLabel.setText(message);
         init(categories);
