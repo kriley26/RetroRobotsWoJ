@@ -91,11 +91,11 @@ public class Player {
 	}
 
 	public void increaseToken() {
-		this.token++;
+		this.token = 1;
 	}
 
 	public void useToken() {
-		this.token--;
+		this.token = 0;
 	}
 	
 	// add token when player gets a free turn sector

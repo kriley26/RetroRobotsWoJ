@@ -373,8 +373,8 @@ public class PlayerWindow extends javax.swing.JFrame {
                 if (Boolean.parseBoolean(hasFreeToken)) {
                     int choice = JOptionPane.showConfirmDialog(this, "You lost your turn. Would you like to use your Free Turn Token now?");
                     if (choice == JOptionPane.YES_OPTION) {
-                        spinAgain("Please Spin again.");
                         ServerConnectorFactory.queryServer(ServerConnectorFactory.USE_FREE_TOKEN);
+                        spinAgain("Please Spin again.");
                         break;
                     }
                 }
@@ -403,8 +403,8 @@ public class PlayerWindow extends javax.swing.JFrame {
                     int choice = JOptionPane.showConfirmDialog(this, "You landed on Bankrupt but you may " +
                             "continue your turn. Would you like to use your Free Turn Token now?");
                     if (choice == JOptionPane.YES_OPTION) {
-                        spinAgain("Please continue your turn.");
                         ServerConnectorFactory.queryServer(ServerConnectorFactory.USE_FREE_TOKEN);
+                        spinAgain("Please continue your turn.");
                         break;
                     }
                 }
