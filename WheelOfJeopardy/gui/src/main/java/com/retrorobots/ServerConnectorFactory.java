@@ -17,10 +17,11 @@ public class ServerConnectorFactory {
     public static String GET_QUESTION_PATH = "/getQuestion";
     public static String VERIFY_ANSWER_PATH = "/verifyAnswer";
     public static String FREE_TURN_PATH = "/freeTurn";
+    public static String CHECK_PLAYER_FREE_TOKEN = "/freeTurn/player";
+    public static String USE_FREE_TOKEN = "/freeTurn/useToken";
     public static String LOSE_TURN_PATH = "/loseTurn";
     public static String BANKRUPT_PATH = "/bankrupt";
     public static String OPPONENTS_CHOICE_PLAYER_PATH = "/opponentsChoice/player";
-    public static String CHECK_PLAYER_FREE_TOKEN = "/freeTurn/player";
 
     // question controller mappings
     public static String QUESTION_PATH = "/question";

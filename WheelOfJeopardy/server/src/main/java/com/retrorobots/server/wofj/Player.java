@@ -90,16 +90,18 @@ public class Player {
 		return token;
 	}
 
-	public void increaseToken(boolean bool) {
-		if (bool) {
-			this.token++;
-		}
+	public void increaseToken() {
+		this.token++;
+	}
+
+	public void useToken() {
+		this.token--;
 	}
 	
 	// add token when player gets a free turn sector
 	public boolean addToken() {
 		boolean newToken = getToken() == 0 ;
-		increaseToken(newToken);
+		increaseToken();
 		return newToken;
 	}
 

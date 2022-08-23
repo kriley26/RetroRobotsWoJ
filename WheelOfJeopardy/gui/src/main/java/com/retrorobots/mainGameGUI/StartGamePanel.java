@@ -79,6 +79,7 @@ public class StartGamePanel extends javax.swing.JPanel {
     public void endRound() {
         round++;
         this.startGameButton.setEnabled(true);
+        this.startGameButton.setText("Start Next Round");
         requestFocus();
     }
 

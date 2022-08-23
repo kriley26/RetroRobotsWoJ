@@ -7,6 +7,8 @@ import com.retrorobots.server.wofj.Game;
 import com.retrorobots.server.wofj.Player;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +23,7 @@ import java.util.List;
 
 @RestController
 public class GameController {
+    private Logger LOGGER = LoggerFactory.getLogger(GameController.class);
 
     private QuestionController qc = new QuestionController();
     private Game g;
@@ -179,14 +182,10 @@ public class GameController {
 
     @RequestMapping("/verifyAnswer")
     public AnswerResult verifyAnswer(@RequestParam String ans) {
-        System.out.println(ans);
+        LOGGER.info(ans);
         boolean correct = g.answerQuestion(ans);
-        if (!correct) {
-            Player player = g.nextPlayer();
-            g.setCurrPlayer(player);
-        }
         if(g.endRoundCheck()) {
-            System.out.println("Saving data");
+            LOGGER.info("Saving data");
             g.savePlayerData();
         }
         AnswerResult an = new AnswerResult(g,correct);
@@ -203,6 +202,12 @@ public class GameController {
         return g.getCurrPlayer().getToken() > 0;
     }
 
+    @RequestMapping("/freeTurn/useToken")
+    public Game useFreeTurn() {
+        g.getCurrPlayer().useToken();
+        return g;
+    }
+
     @RequestMapping("/loseTurn")
     public Game loseTurn() {
         Player player = g.nextPlayer();
@@ -213,7 +218,7 @@ public class GameController {
     @RequestMapping("/bankrupt")
     public Game bankrupt() {
         g.getCurrPlayer().setScore(0);
-        return loseTurn();
+        return g;
     }
 
     @RequestMapping("/opponentsChoice/player")

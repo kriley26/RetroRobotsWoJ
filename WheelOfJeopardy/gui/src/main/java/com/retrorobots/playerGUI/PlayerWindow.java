@@ -11,6 +11,7 @@ import com.retrorobots.playerGUI.gameWheel.MainWheel;
 import com.retrorobots.playerGUI.gameWheel.Wheel;
 import com.retrorobots.playerGUI.popups.CategorySelector;
 import com.retrorobots.server.wofj.Player;
+import org.apache.catalina.Server;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -194,6 +195,8 @@ public class PlayerWindow extends javax.swing.JFrame {
     }
 
     private void updateCategoryList(List<JSONObject> cats) {
+        if (categories.size() > 0)
+            categories.clear();
         for (JSONObject jo : cats) {
             categories.add(jo.getString("categoryName"));
         }
@@ -360,11 +363,21 @@ public class PlayerWindow extends javax.swing.JFrame {
 
         String cat = wheel.getSelectedString();
         String data;
-        CategorySelector cs;
+        String hasFreeToken;
         String message;
+        CategorySelector cs;
         boolean validChoice;
         switch (cat.toLowerCase()) {
             case ("lose turn"):
+                hasFreeToken = ServerConnectorFactory.queryServer(ServerConnectorFactory.CHECK_PLAYER_FREE_TOKEN);
+                if (Boolean.parseBoolean(hasFreeToken)) {
+                    int choice = JOptionPane.showConfirmDialog(this, "You lost your turn. Would you like to use your Free Turn Token now?");
+                    if (choice == JOptionPane.YES_OPTION) {
+                        spinAgain("Please Spin again.");
+                        ServerConnectorFactory.queryServer(ServerConnectorFactory.USE_FREE_TOKEN);
+                        break;
+                    }
+                }
                 data = ServerConnectorFactory.queryServer(ServerConnectorFactory.LOSE_TURN_PATH);
                 JSONObject game = new JSONObject(data);
                 JSONObject currPlayer = game.getJSONObject("currPlayer");
@@ -382,11 +395,22 @@ public class PlayerWindow extends javax.swing.JFrame {
                 }
                 break;
             case ("bankrupt"):
-                JOptionPane.showMessageDialog(this, "Sorry you are now bankrupt!");
                 data = ServerConnectorFactory.queryServer(ServerConnectorFactory.BANKRUPT_PATH);
+                JOptionPane.showMessageDialog(this, "Sorry you are now bankrupt!");
+                hasFreeToken = ServerConnectorFactory.queryServer(ServerConnectorFactory.CHECK_PLAYER_FREE_TOKEN);
+                this.main.updateGame(new JSONObject(data));
+                if (Boolean.parseBoolean(hasFreeToken)) {
+                    int choice = JOptionPane.showConfirmDialog(this, "You landed on Bankrupt but you may " +
+                            "continue your turn. Would you like to use your Free Turn Token now?");
+                    if (choice == JOptionPane.YES_OPTION) {
+                        spinAgain("Please continue your turn.");
+                        ServerConnectorFactory.queryServer(ServerConnectorFactory.USE_FREE_TOKEN);
+                        break;
+                    }
+                }
+                data = ServerConnectorFactory.queryServer(ServerConnectorFactory.LOSE_TURN_PATH);
                 JSONObject game1 = new JSONObject(data);
                 JSONObject currPlayer1 = game1.getJSONObject("currPlayer");
-                this.main.updateGame(new JSONObject(data));
                 switchPlayers(currPlayer1.getString("name"));
                 break;
             case ("player's choice"):
@@ -403,7 +427,7 @@ public class PlayerWindow extends javax.swing.JFrame {
                         }
                     }
                     data = cs.getSelectedCat();
-                    validChoice = sendCategory(data);
+                    validChoice = sendCategory(data,"Invalid category. Please select another.");
                 }
                 break;
             case ("opponent's choice"):
@@ -425,20 +449,20 @@ public class PlayerWindow extends javax.swing.JFrame {
                     }
                     data = cs.getSelectedCat();
 
-                    validChoice = sendCategory(data);
+                    validChoice = sendCategory(data, "Invalid category. Please select another.");
                 }
                 break;
             default:
-                sendCategory(cat);
+                sendCategory(cat, "No question available for this category. Please spin again.");
                 break;
         }
     }//GEN-LAST:event_sendCategoryActionPerformed
 
-    private boolean sendCategory(String cat) {
+    private boolean sendCategory(String cat, String message) {
         String continueProcess = ServerConnectorFactory.queryServer("/availableQuestion?cat="+cat);
         boolean con = Boolean.parseBoolean(continueProcess);
         if (!con) {
-            spinAgain("No question available for this category. Please spin again.");
+            spinAgain(message);
             return false;
         }
         String data = ServerConnectorFactory.queryServer(ServerConnectorFactory.GET_QUESTION_PATH+"?cat="+cat);

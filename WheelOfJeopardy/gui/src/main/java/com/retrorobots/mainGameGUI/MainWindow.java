@@ -88,9 +88,9 @@ public class MainWindow extends javax.swing.JFrame {
         this.sgp.disableSgp();
         String data = ServerConnectorFactory.queryServer("/endGame");
         System.out.println(data);
-        JSONObject plyer = new JSONObject(data);
-        JOptionPane.showMessageDialog(this, plyer.getString("name")
-                + " won the game with " + (plyer.getInt("roundOneScore")+plyer.getInt("roundTwoScore")));
+        JSONObject player = new JSONObject(data);
+        JOptionPane.showMessageDialog(this, player.getString("name")
+                + " won the game with " + (player.getInt("roundOneScore")+player.getInt("roundTwoScore")));
     }
 
     public PlayerWindow getPlayerWindow(String player) {

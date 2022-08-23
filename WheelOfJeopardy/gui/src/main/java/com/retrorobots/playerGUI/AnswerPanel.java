@@ -13,12 +13,15 @@ import javax.swing.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author KeeganRiley
  */
 public class AnswerPanel extends javax.swing.JPanel {
+    private Logger LOGGER = LoggerFactory.getLogger(AnswerPanel.class);
 
     private PlayerWindow pw;
     private List<JButton> jbuts;
@@ -153,33 +156,37 @@ public class AnswerPanel extends javax.swing.JPanel {
 
         if (spinsLeft <= 0 || quesLeft <= 0) {
             String end = ServerConnectorFactory.queryServer("/checkRound");
+            enableAllButtons(false);
             if (end.equalsIgnoreCase("end of Game")) {
                 this.pw.endGame(game);
-                enableAllButtons(false);
                 return;
             }
             this.pw.endRound();
-            enableAllButtons(false);
             return;
         }
 
         String hasFreeToken = ServerConnectorFactory.queryServer(ServerConnectorFactory.CHECK_PLAYER_FREE_TOKEN);
 
-        if (correct || Boolean.parseBoolean(hasFreeToken)) {
-            if (!correct && Boolean.parseBoolean(hasFreeToken)) {
-                
-            }
+        if (correct) {
             this.pw.spinAgain();
         } else {
+            int choice = 1;
             if (Boolean.parseBoolean(hasFreeToken)) {
-                int choice = JOptionPane.showConfirmDialog(this, "Would you like to use your Free Turn Token now?");
-                if (choice == JOptionPane.YES_OPTION) {
-                    this.pw.spinAgain();
-                }
+                choice = JOptionPane.showConfirmDialog(this, "Would you like to use your Free Turn Token now?");
             }
-            enableAllButtons(false);
-            JSONObject currP = game.getJSONObject("currPlayer");
-            this.pw.switchPlayers(currP.getString("name"));
+            if (choice == JOptionPane.YES_OPTION) {
+                this.pw.spinAgain();
+                ServerConnectorFactory.queryServer(ServerConnectorFactory.USE_FREE_TOKEN);
+            } else {
+                LOGGER.info("Choice: {}", choice);
+                returnData = ServerConnectorFactory.queryServer(ServerConnectorFactory.LOSE_TURN_PATH);
+                game = new JSONObject(returnData);
+                players = game.getJSONArray("playerList");
+
+                enableAllButtons(false);
+                JSONObject currP = game.getJSONObject("currPlayer");
+                this.pw.switchPlayers(currP.getString("name"));
+            }
         }
         this.pw.updatePlayers(players);
         this.pw.updateGame(game);
